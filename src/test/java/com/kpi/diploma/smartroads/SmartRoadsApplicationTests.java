@@ -1,5 +1,6 @@
 package com.kpi.diploma.smartroads;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class SmartRoadsApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	public void testHerokuBehaviorDuringFailingTest() {
+		Assert.assertTrue(false);
 	}
 
 }
