@@ -1,0 +1,10 @@
+@DebRef - annotation for child referenced mapping
+
+heroku logs --tail
+heroku create
+heroku ps:scale web=1
+heroku ps
+heroku addons:create papertrail
+heroku addons
+heroku run bash
+heroku addons:create mongolab

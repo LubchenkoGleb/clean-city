@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      database: smartroads
+      uri:mongodb://heroku_66krdg88:ht70l8gnd3qrg0p508nhr6jodv@ds139869.mlab.com:39869/heroku_66krdg88
+#  devtools:
+#    remote:
+#      secret: c21hcnQgcm9hZHMgc2VjcmV0IGtleQ==
