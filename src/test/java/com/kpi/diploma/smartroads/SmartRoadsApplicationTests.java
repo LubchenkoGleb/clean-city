@@ -14,5 +14,4 @@ public class SmartRoadsApplicationTests {
 	public void testHerokuBehaviorDuringFailingTest() {
 		Assert.assertTrue(false);
 	}
-
 }
