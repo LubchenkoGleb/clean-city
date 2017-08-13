@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
 @Configuration
 @EnableMongoAuditing
-public class MainContext {
+public class RootConfig {
     @Bean
     public UserCascadeSaveEL userCascadingMongoEventListener() {
         return new UserCascadeSaveEL();
