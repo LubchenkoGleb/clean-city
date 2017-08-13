@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.config;
+package com.kpi.diploma.smartroads.config.db;
 
 import com.mongodb.*;
 import lombok.extern.slf4j.Slf4j;

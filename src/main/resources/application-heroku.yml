@@ -7,3 +7,11 @@ mongo:
     port: 39869
   database:
     name: heroku_66krdg88
+
+redis:
+  credentials:
+    user: h
+    password: pc3516871ff0942c9f0558f0ee29b7db00d559de889f31477d22e00d08f928d93
+  address:
+    host: ec2-34-225-146-66.compute-1.amazonaws.com
+    port: 55719
