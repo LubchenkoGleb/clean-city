@@ -55,7 +55,6 @@ public class SmartRoadsApplication implements CommandLineRunner {
         user1.getRoles().add(test2);
         user1.setEnable(true);
         userRepository.save(user1);
-
         log.info("users was loaded '{}'", userRepository.findAll().size());
     }
 }

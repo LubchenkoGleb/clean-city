@@ -9,13 +9,13 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 @EnableResourceServer
 public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapter {
 
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http
-                    .csrf().disable()
-                    .anonymous().disable()
-                    .authorizeRequests()
-                    .antMatchers("/is-alive/welcome-page","/registration/**").permitAll()
-                    .anyRequest().authenticated();
-        }
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/is-alive/welcome-page",
+                        "/registration/**", "/is-alive-rest/test").permitAll()
+                .anyRequest().authenticated();
+    }
 }
