@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.repository;
 
-import com.kpi.diploma.smartroads.model.document.User;
+import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.title.Fields;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;

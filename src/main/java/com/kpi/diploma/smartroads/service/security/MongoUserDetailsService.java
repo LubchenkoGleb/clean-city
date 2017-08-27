@@ -1,6 +1,6 @@
-package com.kpi.diploma.smartroads.service;
+package com.kpi.diploma.smartroads.service.security;
 
-import com.kpi.diploma.smartroads.model.document.User;
+import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.service;
+package com.kpi.diploma.smartroads.service.main;
 
 public interface UserService {
 

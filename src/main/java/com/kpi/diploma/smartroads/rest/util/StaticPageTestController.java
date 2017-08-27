@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @Controller
 @RequestMapping(value = "/is-alive")
-public class IsAliveController {
+public class StaticPageTestController {
 
     @RequestMapping("/welcome-page")
     @ResponseBody
@@ -23,5 +23,7 @@ public class IsAliveController {
         log.info("private-page was visited");
         return "private-page";
     }
+
+
 
 }

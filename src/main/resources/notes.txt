@@ -1,7 +1,13 @@
+--------------------------MONGO-----------------------
 mongodb
-
 @DebRef - annotation for child referenced mapping
-
+show dbs
+db
+use (dbname)
+show tables
+db.{collection_name}.remove({})
+db.{collection_name}.find().pretty()
+--------------------------HEROKU----------------------
 heroku create
 
 heroku ps
@@ -16,3 +22,5 @@ heroku addons:create mongolab
 
 heroku run bash
 
+--------------------------REDIS----------------------
+FLUSHALL - clear all

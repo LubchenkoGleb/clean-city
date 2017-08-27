@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.validation;
 
-import com.kpi.diploma.smartroads.model.document.User;
+import com.kpi.diploma.smartroads.model.document.user.User;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

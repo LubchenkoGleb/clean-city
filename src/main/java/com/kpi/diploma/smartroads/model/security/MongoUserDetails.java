@@ -1,24 +1,26 @@
 package com.kpi.diploma.smartroads.model.security;
 
-import com.kpi.diploma.smartroads.model.document.User;
+import com.kpi.diploma.smartroads.model.document.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.social.security.SocialUserDetails;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class MongoUserDetails implements UserDetails {
+public class MongoUserDetails implements SocialUserDetails {
 
+    private String userId;
     private String userName;
     private String password;
     private Boolean enable;
     private List<GrantedAuthority> roles;
 
     public MongoUserDetails(User user) {
+        this.userId = user.getId();
         this.userName = user.getEmail();
         this.password = user.getPassword();
         this.enable = user.getEnable();
@@ -59,5 +61,10 @@ public class MongoUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enable;
+    }
+
+    @Override
+    public String getUserId() {
+        return this.userId;
     }
 }

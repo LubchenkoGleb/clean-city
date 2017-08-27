@@ -1,17 +1,11 @@
-mongo:
-  credentials:
-    user: heroku_66krdg88
-    password: ht70l8gnd3qrg0p508nhr6jodv
-  address:
-    host: ds139869.mlab.com
-    port: 39869
-  database:
-    name: heroku_66krdg88
+spring:
+  redis:
+    url: redis://h:pc3516871ff0942c9f0558f0ee29b7db00d559de889f31477d22e00d08f928d93@ec2-34-225-146-66.compute-1.amazonaws.com:55719
 
-redis:
-  credentials:
-    user: h
-    password: pc3516871ff0942c9f0558f0ee29b7db00d559de889f31477d22e00d08f928d93
-  address:
-    host: ec2-34-225-146-66.compute-1.amazonaws.com
-    port: 55719
+  data:
+    mongodb:
+      password: ht70l8gnd3qrg0p508nhr6jodv
+      username: heroku_66krdg88
+      database: heroku_66krdg88
+      host: ds139869.mlab.com
+      port: 39869

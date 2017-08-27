@@ -1,15 +1,11 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
-import com.kpi.diploma.smartroads.model.document.User;
-import com.kpi.diploma.smartroads.repository.UserRepository;
-import com.kpi.diploma.smartroads.service.UserService;
+import com.kpi.diploma.smartroads.model.document.user.User;
+import com.kpi.diploma.smartroads.service.main.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -31,5 +27,4 @@ public class RegistrationController {
         boolean result = userService.existByEmail(user.getEmail());
         return ResponseEntity.ok(user);
     }
-
 }

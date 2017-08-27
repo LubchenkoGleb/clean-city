@@ -1,19 +1,13 @@
 package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.Role;
-import com.kpi.diploma.smartroads.model.document.User;
-import com.kpi.diploma.smartroads.model.title.Documents;
-import com.kpi.diploma.smartroads.repository.RoleRepository;
+import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.repository.UserRepository;
-import com.mongodb.MongoClient;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
@@ -21,18 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SmartRoadsApplication implements CommandLineRunner {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final MongoClient mongoClient;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public SmartRoadsApplication(UserRepository userRepository,
-                                 RoleRepository roleRepository,
-                                 MongoClient mongoClient,
-                                 PasswordEncoder passwordEncoder) {
+                                 PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.mongoClient = mongoClient;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -44,9 +33,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
 
-//        mongoClient.getDatabase("smartroads")
-//                .getCollection(Documents.USER).deleteMany(new Document());
-
+        userRepository.deleteAll();
         String pass1 = passwordEncoder.encode("pass1");
         User user1 = new User("email2", pass1);
         Role test1 = new Role("test1");
@@ -55,7 +42,6 @@ public class SmartRoadsApplication implements CommandLineRunner {
         user1.getRoles().add(test2);
         user1.setEnable(true);
         userRepository.save(user1);
-
         log.info("users was loaded '{}'", userRepository.findAll().size());
     }
 }
