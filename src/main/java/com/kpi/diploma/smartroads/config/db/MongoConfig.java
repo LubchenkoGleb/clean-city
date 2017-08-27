@@ -4,6 +4,7 @@ import com.mongodb.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
@@ -33,6 +34,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
     }
 
     @Override
+    @Bean
     public Mongo mongo() throws Exception {
         log.info("mongoHost: " + mongoHost + ", mongoPort: " + mongoPort);
 

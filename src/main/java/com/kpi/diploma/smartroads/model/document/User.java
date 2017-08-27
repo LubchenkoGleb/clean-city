@@ -1,67 +1,51 @@
 package com.kpi.diploma.smartroads.model.document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kpi.diploma.smartroads.validation.PasswordMatches;
+import com.kpi.diploma.smartroads.validation.ValidateEmail;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
-public class User implements UserDetails {
+@PasswordMatches
+public class User {
 
     @Id
     private String id;
+
+    @NotNull @NotEmpty
+    @ValidateEmail
+    private String email;
+
+//    @JsonIgnore
+    @NotNull @NotEmpty
+    private String password;
+    private String matchingPassword;
+
+    private Boolean enable = false;
+
     @CreatedDate
     private String createdDate;
-    private String email;
-    @JsonIgnore
-    private String password;
-    private Boolean enable = false;
+
 //    @DBRef
     private Set<Role> roles;
 
     public User() {
-        this.roles = new HashSet<>();
+        roles = new HashSet<>();
     }
 
     public User(String email, String password) {
-        this.roles = new HashSet<>();
+        this();
         this.email = email;
         this.password = password;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enable;
     }
 }
