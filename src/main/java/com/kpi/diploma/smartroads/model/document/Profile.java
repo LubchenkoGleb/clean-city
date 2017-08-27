@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model;
+package com.kpi.diploma.smartroads.model.document;
 
 import java.net.URI;
 import java.nio.file.Path;

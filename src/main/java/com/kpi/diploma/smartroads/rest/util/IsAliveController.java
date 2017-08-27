@@ -1,13 +1,14 @@
-package com.kpi.diploma.smartroads.rest;
+package com.kpi.diploma.smartroads.rest.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Controller
 @Slf4j
-public class StaticController {
+@Controller
+@RequestMapping(value = "/is-alive")
+public class IsAliveController {
 
     @RequestMapping("/welcome-page")
     @ResponseBody
@@ -15,4 +16,12 @@ public class StaticController {
         log.info("welcome-page was visited");
         return "welcome-page";
     }
+
+    @RequestMapping("/private-page")
+    @ResponseBody
+    private String privatePage() {
+        log.info("private-page was visited");
+        return "private-page";
+    }
+
 }

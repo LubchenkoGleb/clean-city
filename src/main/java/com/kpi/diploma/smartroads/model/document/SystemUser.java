@@ -1,8 +1,6 @@
-package com.kpi.diploma.smartroads.model;
+package com.kpi.diploma.smartroads.model.document;
 
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class SystemUser extends User {

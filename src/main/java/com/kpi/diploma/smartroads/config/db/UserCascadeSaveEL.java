@@ -1,7 +1,6 @@
-package com.kpi.diploma.smartroads.eventlistener;
+package com.kpi.diploma.smartroads.config.db;
 
-import com.kpi.diploma.smartroads.model.Role;
-import com.kpi.diploma.smartroads.model.User;
+import com.kpi.diploma.smartroads.model.document.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;

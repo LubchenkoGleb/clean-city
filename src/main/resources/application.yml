@@ -2,10 +2,23 @@ spring:
   data:
     mongodb:
       database: smartroads
+  redis:
+        host: 127.0.0.1
+        port: 6379
+
 #  profiles:
 #    active: heroku
+
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+
 server:
   port: 8000
+
+logging:
+  level: debug
 
 #  devtools:
 #    remote:
