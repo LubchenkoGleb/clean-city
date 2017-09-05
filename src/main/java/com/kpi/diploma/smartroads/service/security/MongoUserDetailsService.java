@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.service;
+package com.kpi.diploma.smartroads.service.security;
 
 import com.kpi.diploma.smartroads.model.document.User;
 import com.kpi.diploma.smartroads.model.security.MongoUserDetails;

@@ -2,18 +2,14 @@ package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.Role;
 import com.kpi.diploma.smartroads.model.document.User;
-import com.kpi.diploma.smartroads.model.title.Documents;
 import com.kpi.diploma.smartroads.repository.RoleRepository;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import com.mongodb.MongoClient;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication

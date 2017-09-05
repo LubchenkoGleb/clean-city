@@ -26,6 +26,8 @@ public class User {
     @ValidateEmail
     private String email;
 
+    private String firsName;
+
 //    @JsonIgnore
     @NotNull @NotEmpty
     private String password;

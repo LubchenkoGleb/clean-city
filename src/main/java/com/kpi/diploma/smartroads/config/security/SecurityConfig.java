@@ -1,12 +1,13 @@
 package com.kpi.diploma.smartroads.config.security;
 
-import com.kpi.diploma.smartroads.service.MongoUserDetailsService;
+import com.kpi.diploma.smartroads.service.security.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,9 +24,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.mongoUserDetailsService = mongoUserDetailsService;
     }
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Override
+    public void configure(AuthenticationManagerBuilder builder) throws Exception {
+
+        builder
+                .userDetailsService(mongoUserDetailsService)
+                .passwordEncoder(getPasswordEncoder());
     }
 
     @Bean
@@ -34,11 +38,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Autowired
-    public void globalUserDetails(AuthenticationManagerBuilder builder) throws Exception {
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-        builder
-                .userDetailsService(mongoUserDetailsService)
-                .passwordEncoder(getPasswordEncoder());
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web
+                .ignoring().antMatchers("/connect/**");
+//        super.configure(web);
     }
 }

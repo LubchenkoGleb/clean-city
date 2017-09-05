@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 @Configuration
-public class DataStoreConfig {
+public class RedisTokenStoreConfig {
 
     private final Environment environment;
     private static final String REDIS_CACHE_NAME = "redis_cache_name";
@@ -23,7 +23,7 @@ public class DataStoreConfig {
     private static final Long EXPIRE = 60 * 60L;
 
     @Autowired
-    public DataStoreConfig(Environment environment) {
+    public RedisTokenStoreConfig(Environment environment) {
         this.environment = environment;
     }
 
