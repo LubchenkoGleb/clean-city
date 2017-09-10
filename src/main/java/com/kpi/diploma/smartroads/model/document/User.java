@@ -1,17 +1,13 @@
 package com.kpi.diploma.smartroads.model.document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kpi.diploma.smartroads.validation.PasswordMatches;
 import com.kpi.diploma.smartroads.validation.ValidateEmail;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 

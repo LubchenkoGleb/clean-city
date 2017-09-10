@@ -1,7 +1,5 @@
 package com.kpi.diploma.smartroads.validation;
 
-import org.springframework.security.access.method.P;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;

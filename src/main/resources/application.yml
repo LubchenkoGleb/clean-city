@@ -6,11 +6,6 @@ spring:
     host: 127.0.0.1
     port: 6379
 
-social:
-  facebook:
-    appId: 1715128575194570
-    appSecret: f19f6e151d2c4750486b9fe3682f2101
-
 #  profiles:
 #    active: heroku
 

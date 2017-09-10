@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @Slf4j
@@ -19,17 +18,18 @@ public class SmartRoadsApplication implements CommandLineRunner {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final MongoClient mongoClient;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public SmartRoadsApplication(UserRepository userRepository,
                                  RoleRepository roleRepository,
-                                 MongoClient mongoClient,
-                                 PasswordEncoder passwordEncoder) {
+                                 MongoClient mongoClient
+//                                 PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.mongoClient = mongoClient;
-        this.passwordEncoder = passwordEncoder;
+//        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -43,8 +43,8 @@ public class SmartRoadsApplication implements CommandLineRunner {
 //        mongoClient.getDatabase("smartroads")
 //                .getCollection(Documents.USER).deleteMany(new Document());
 
-        String pass1 = passwordEncoder.encode("pass1");
-        User user1 = new User("email2", pass1);
+//        String pass1 = passwordEncoder.encode("pass1");
+        User user1 = new User("email2", "pass1");
         Role test1 = new Role("test1");
         Role test2 = new Role("test2");
         user1.getRoles().add(test1);
