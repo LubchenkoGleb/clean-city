@@ -1,8 +1,9 @@
 package com.kpi.diploma.smartroads.model.document.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kpi.diploma.smartroads.model.document.Role;
-import com.kpi.diploma.smartroads.validation.PasswordMatches;
-import com.kpi.diploma.smartroads.validation.ValidateEmail;
+import com.kpi.diploma.smartroads.service.validation.PasswordMatches;
+import com.kpi.diploma.smartroads.service.validation.ValidateEmail;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,18 +19,24 @@ public class User {
 
     @Id
     private String id;
-    @NotNull @NotEmpty
+
+    @NotNull
+    @NotEmpty
     @ValidateEmail
     private String email;
-//    @JsonIgnore
-    @NotNull @NotEmpty
+
+    @JsonIgnore
+    @NotNull
+    @NotEmpty
     private String password;
+
     private String matchingPassword;
+
     private Boolean enable = false;
+
     @CreatedDate
     private String createdDate;
 
-//    @DBRef
     private Set<Role> roles;
 
     public User() {

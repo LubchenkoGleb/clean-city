@@ -1,7 +1,10 @@
 package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.Role;
-import com.kpi.diploma.smartroads.model.document.user.User;
+import com.kpi.diploma.smartroads.model.document.user.Company;
+import com.kpi.diploma.smartroads.model.title.Constants;
+import com.kpi.diploma.smartroads.repository.CompanyRepository;
+import com.kpi.diploma.smartroads.repository.RoleRepository;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +19,18 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
+    private final CompanyRepository companyRepository;
 
     @Autowired
     public SmartRoadsApplication(UserRepository userRepository,
-                                 PasswordEncoder passwordEncoder
-    ) {
+                                 PasswordEncoder passwordEncoder,
+                                 RoleRepository roleRepository,
+                                 CompanyRepository companyRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.companyRepository = companyRepository;
     }
 
 
@@ -32,16 +40,32 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
+        initRoles();
+        initCompanies();
+        log.info("test data was init");
+    }
 
-        userRepository.deleteAll();
-        String pass1 = passwordEncoder.encode("pass1");
-        User user1 = new User("email2", pass1);
-        Role test1 = new Role("test1");
-        Role test2 = new Role("test2");
-        user1.getRoles().add(test1);
-        user1.getRoles().add(test2);
-        user1.setEnable(true);
-        userRepository.save(user1);
-        log.info("users was loaded '{}'", userRepository.findAll().size());
+    private void initRoles() {
+        roleRepository.deleteAll();
+        Role roleCompany = new Role("COMPANY");
+        Role roleDriver = new Role("DRIVER");
+        Role roleManager = new Role("MANAGER");
+        roleRepository.save(roleCompany);
+        roleRepository.save(roleDriver);
+        roleRepository.save(roleManager);
+    }
+
+    private void initCompanies() {
+        Role companyRole = roleRepository.findByRole(Constants.ROLE_COMPANY);
+
+        companyRepository.deleteAll();
+        Company company = new Company();
+        company.setEmail("company1");
+        company.setFirstName("cp1");
+        company.setLastName("cp1");
+        company.setPassword(passwordEncoder.encode("1234"));
+        company.setEnable(true);
+        company.getRoles().add(companyRole);
+        companyRepository.save(company);
     }
 }

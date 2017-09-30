@@ -20,14 +20,15 @@ public class MongoUserDetails implements SocialUserDetails {
     private List<GrantedAuthority> roles;
 
     public MongoUserDetails(User user) {
+        log.info("in user detail constructor");
         this.userId = user.getId();
         this.userName = user.getEmail();
         this.password = user.getPassword();
         this.enable = user.getEnable();
-        log.info("in user detail constructor");
         this.roles = user.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
+        log.info("user details created");
     }
 
     @Override

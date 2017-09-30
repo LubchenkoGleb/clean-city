@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.validation;
+package com.kpi.diploma.smartroads.service.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

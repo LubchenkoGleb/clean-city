@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "user")
-public class Manager extends User {
+public class Driver extends User {
 
     private String inviteUrl;
 

@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.validation;
+package com.kpi.diploma.smartroads.service.validation;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
 
