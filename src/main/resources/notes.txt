@@ -9,18 +9,13 @@ db.{collection_name}.remove({})
 db.{collection_name}.find().pretty()
 --------------------------HEROKU----------------------
 heroku create
-
 heroku ps
 heroku ps:scale web=1
-
 heroku logs --tail
-
 heroku addons
 heroku addons:create papertrail
 heroku addons:open papertrail
 heroku addons:create mongolab
-
 heroku run bash
-
 --------------------------REDIS----------------------
 FLUSHALL - clear all
