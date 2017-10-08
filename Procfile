@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -jar target/smart-roads-0.0.1.jar  --spring.profiles.active=heroku

@@ -1,0 +1,42 @@
+server:
+  port: 8000
+
+spring:
+  data:
+    mongodb:
+      database: smartroads
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  social:
+    facebook:
+      appId: ${CLEAN_CITY_FACEBOOK_API_ID}
+      appSecret: ${CLEAN_CITY_FACEBOOK_APP_SERCRET}
+
+email:
+  username: gleb.lubchenko@gmail.com
+  password: ${CLEAN_CITY_EMAIL_PASSWORD}
+  host: smtp.gmail.com
+  port: 587
+
+cloudinary:
+  name: clean-city
+  key: ${CLEAN_CITY_CLOUDINARY_KEY}
+  secret: ${CLEAN_CITY_CLOUDINARY_SECRET}
+
+security:
+  oauth2:
+    resource:
+      filter-order: 3
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+
+#  devtools:
+#    remote:
+#      secret: c21hcnQgcm9hZHMgc2VjcmV0IGtleQ==
