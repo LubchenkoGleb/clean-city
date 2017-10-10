@@ -1,5 +1,7 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
+import com.kpi.diploma.smartroads.model.dto.DriverDto;
+import com.kpi.diploma.smartroads.model.dto.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.security.MongoUserDetails;
@@ -10,13 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -52,5 +52,25 @@ public class CompanyController {
         log.info("'driver={}'", manager);
 
         return ResponseEntity.ok(manager);
+    }
+
+    @GetMapping(value = "/get-drivers")
+    private ResponseEntity<List<DriverDto>> getDrivers(@AuthenticationPrincipal MongoUserDetails principal) {
+        log.info("'getDrivers' invoked for user'{}'", principal.getUserId());
+
+        List<DriverDto> drivers = companyService.getDrivers(principal.getUserId());
+        log.info("'drivers={}'", drivers);
+
+        return ResponseEntity.ok(drivers);
+    }
+
+    @GetMapping(value = "/get-drivers")
+    private ResponseEntity<List<ManagerDto>> getManagers(@AuthenticationPrincipal MongoUserDetails principal) {
+        log.info("'getManagers' invoked for user'{}'", principal.getUserId());
+
+        List<ManagerDto> managers = companyService.getManagers(principal.getUserId());
+        log.info("'managers={}'", managers);
+
+        return ResponseEntity.ok(managers);
     }
 }

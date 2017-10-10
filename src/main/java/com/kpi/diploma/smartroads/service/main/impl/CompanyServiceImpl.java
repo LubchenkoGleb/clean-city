@@ -4,6 +4,8 @@ import com.kpi.diploma.smartroads.model.document.Role;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
+import com.kpi.diploma.smartroads.model.dto.DriverDto;
+import com.kpi.diploma.smartroads.model.dto.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.title.Constants;
@@ -17,10 +19,13 @@ import com.kpi.diploma.smartroads.service.util.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -96,5 +101,29 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(company);
 
         return manager;
+    }
+
+    @Override
+    public List<DriverDto> getDrivers(String companyId) {
+        log.info("'getDrivers' invoked with params'{}'", companyId);
+
+        Company company = companyRepository.findOne(companyId);
+        List<DriverDto> drivers = company.getDrivers()
+                .stream().map(DriverDto::convert).collect(Collectors.toList());
+        log.info("'drivers={}'", drivers);
+
+        return drivers;
+    }
+
+    @Override
+    public List<ManagerDto> getManagers(String companyId) {
+        log.info("'getManagers' invoked with params'{}'", companyId);
+
+        Company company = companyRepository.findOne(companyId);
+        List<ManagerDto> managers = company.getManagers()
+                .stream().map(ManagerDto::convert).collect(Collectors.toList());
+        log.info("'managers={}'", managers);
+
+        return managers;
     }
 }

@@ -13,6 +13,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 @Slf4j
 public class SmartRoadsApplication implements CommandLineRunner {
@@ -73,7 +76,35 @@ public class SmartRoadsApplication implements CommandLineRunner {
         company.setPassword(passwordEncoder.encode("1234"));
         company.setEnable(true);
         company.getRoles().add(companyRole);
+        company.getDrivers().addAll(testDrivers());
+        company.getManagers().addAll(testManagers());
         companyRepository.save(company);
+    }
+
+    private List<Driver> testDrivers() {
+        ArrayList<Driver> drivers = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            Driver driver = new Driver();
+            driver.setEmail("driver" + i + "@driver.com");
+            driver.setFirstName("driver" + i + "_firstName");
+            driver.setLastName("driver" + i + "_lastName");
+            driver = driverRepository.save(driver);
+            drivers.add(driver);
+        }
+        return drivers;
+    }
+
+    private List<Manager> testManagers() {
+        ArrayList<Manager> managers = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            Manager manager = new Manager();
+            manager.setEmail("manager" + i + "@manager.com");
+            manager.setFirstName("manager" + i + "_firstName");
+            manager.setLastName("manager" + i + "_lastName");
+            manager = managerRepository.save(manager);
+            managers.add(manager);
+        }
+        return managers;
     }
 
     private void driverForConfirmation() {
