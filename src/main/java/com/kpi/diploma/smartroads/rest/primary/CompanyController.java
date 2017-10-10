@@ -64,7 +64,7 @@ public class CompanyController {
         return ResponseEntity.ok(drivers);
     }
 
-    @GetMapping(value = "/get-drivers")
+    @GetMapping(value = "/get-managers")
     private ResponseEntity<List<ManagerDto>> getManagers(@AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'getManagers' invoked for user'{}'", principal.getUserId());
 

@@ -30,7 +30,7 @@ public class RedisTokenStoreConfig {
     }
 
     @Bean
-    public TokenStore tokenStoreHeroku(RedisConnectionFactory redisConnectionFactory) {
+    public TokenStore tokenStore(RedisConnectionFactory redisConnectionFactory) {
         RedisTokenStore tokenStore = new RedisTokenStore(redisConnectionFactory);
         return tokenStore;
     }
