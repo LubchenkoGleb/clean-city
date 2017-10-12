@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.service.main.impl;
+package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.Role;
 import com.kpi.diploma.smartroads.model.document.user.Company;
@@ -14,12 +14,11 @@ import com.kpi.diploma.smartroads.repository.CompanyRepository;
 import com.kpi.diploma.smartroads.repository.DriverRepository;
 import com.kpi.diploma.smartroads.repository.ManagerRepository;
 import com.kpi.diploma.smartroads.repository.RoleRepository;
-import com.kpi.diploma.smartroads.service.main.CompanyService;
+import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import com.kpi.diploma.smartroads.service.util.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,19 +55,20 @@ public class CompanyServiceImpl implements CompanyService {
             String companyId, RegistrationDriverDto driver) throws MessagingException {
         log.info("'createDriver' invoked with params'{}, {}'", companyId, driver);
 
+        String inviteKey = RandomStringUtils.randomAlphabetic(50);
+        EmailMessage emailMessage = new EmailMessage(driver.getEmail(), "Confirm driver account",
+                "http://tempurl.com?email=" + driver.getEmail() + "&key=" + inviteKey);
+        emailService.send(emailMessage);
+        log.info("email sent successfully");
+
         Role driverRole = roleRepository.findByRole(Constants.ROLE_DRIVER);
 
         Driver driverEntity = new Driver();
         driverEntity.setEmail(driver.getEmail());
         driverEntity.getRoles().add(driverRole);
-        driverEntity.setInviteKey(RandomStringUtils.randomAlphabetic(50));
+        driverEntity.setInviteKey(inviteKey);
         driverEntity = driverRepository.save(driverEntity);
         log.info("'driverEntity={}'", driverEntity);
-
-        EmailMessage emailMessage = new EmailMessage(driver.getEmail(), "Confirm driver account",
-                "http://tempurl.com?email=" + driver.getEmail() + "&key=" + driverEntity.getInviteKey());
-        emailService.send(emailMessage);
-        log.info("email is sent");
 
         Company company = companyRepository.findOne(companyId);
         company.getDrivers().add(driverEntity);
@@ -82,19 +82,20 @@ public class CompanyServiceImpl implements CompanyService {
             String companyId, RegistrationManagerDto manager) throws MessagingException {
         log.info("'createManager' invoked with params'{}, {}'", companyId, manager);
 
+        String inviteKey = RandomStringUtils.randomAlphabetic(50);
+        EmailMessage emailMessage = new EmailMessage(manager.getEmail(), "Confirm manager account",
+                "http://tempurl.com?email=" + manager.getEmail() + "&key=" + inviteKey);
+        emailService.send(emailMessage);
+        log.info("email is sent");
+
         Role managerRole = roleRepository.findByRole(Constants.ROLE_MANGER);
 
         Manager managerEntity = new Manager();
         managerEntity.setEmail(manager.getEmail());
         managerEntity.getRoles().add(managerRole);
-        managerEntity.setInviteKey(RandomStringUtils.randomAlphabetic(50));
+        managerEntity.setInviteKey(inviteKey);
         managerEntity = managerRepository.save(managerEntity);
         log.info("'managerEntity={}'", managerEntity);
-
-        EmailMessage emailMessage = new EmailMessage(manager.getEmail(), "Confirm manager account",
-                "http://tempurl.com?email=" + manager.getEmail() + "&key=" + managerEntity.getInviteKey());
-        emailService.send(emailMessage);
-        log.info("email is sent");
 
         Company company = companyRepository.findOne(companyId);
         company.getManagers().add(managerEntity);
@@ -109,7 +110,8 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company company = companyRepository.findOne(companyId);
         List<DriverDto> drivers = company.getDrivers()
-                .stream().map(DriverDto::convert).collect(Collectors.toList());
+                .stream().map(DriverDto::convertToDriverDto)
+                .collect(Collectors.toList());
         log.info("'drivers={}'", drivers);
 
         return drivers;
@@ -121,7 +123,8 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company company = companyRepository.findOne(companyId);
         List<ManagerDto> managers = company.getManagers()
-                .stream().map(ManagerDto::convert).collect(Collectors.toList());
+                .stream().map(manager -> (ManagerDto) ManagerDto.convert(manager))
+                .collect(Collectors.toList());
         log.info("'managers={}'", managers);
 
         return managers;

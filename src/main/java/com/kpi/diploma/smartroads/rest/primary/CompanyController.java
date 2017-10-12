@@ -5,17 +5,14 @@ import com.kpi.diploma.smartroads.model.dto.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.security.MongoUserDetails;
-import com.kpi.diploma.smartroads.service.main.CompanyService;
+import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import java.security.Principal;
 import java.util.List;
 
 @Slf4j

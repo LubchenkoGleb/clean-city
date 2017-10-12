@@ -34,8 +34,9 @@ public class AdviceController {
     @ExceptionHandler(MessagingException.class)
     public ResponseEntity<ErrorMessage> handleMessagingException(
             HttpServletRequest request, MessagingException ex) {
-        log.error("'handleIncorrectInviteUrl' invoked for url'{}'", request.getRequestURL());
+        log.error("'handleMessagingException' invoked for url'{}'", request.getRequestURL());
         log.error("'exceptionMessage={}'", ex.getMessage());
+        ex.printStackTrace();
         ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), "MessagingException");
         return ResponseEntity.ok(errorMessage);
     }

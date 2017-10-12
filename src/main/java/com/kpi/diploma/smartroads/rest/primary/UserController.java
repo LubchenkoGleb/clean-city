@@ -1,7 +1,8 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
+import com.kpi.diploma.smartroads.model.dto.UserDto;
 import com.kpi.diploma.smartroads.model.security.MongoUserDetails;
-import com.kpi.diploma.smartroads.service.util.image.ImageService;
+import com.kpi.diploma.smartroads.service.primary.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +18,20 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(value = "/user")
 public class UserController {
 
-    private final ImageService imageService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(ImageService imageService) {
-        this.imageService = imageService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping(value = "/upload-avatar")
-    private ResponseEntity<Boolean> uploadAvatar(@AuthenticationPrincipal MongoUserDetails principal,
+    private ResponseEntity<UserDto> uploadAvatar(@AuthenticationPrincipal MongoUserDetails principal,
                                                  @RequestParam("file") MultipartFile multipartFile) throws Exception {
         log.info("'uploadAvatar' invoked. File name '{}'", multipartFile.getOriginalFilename());
 
-        Boolean result = imageService.uploadAvatar(principal.getUserId(), multipartFile);
+        UserDto result = userService.setAvatar(principal.getUserId(), multipartFile);
+        log.info("'result={}'", result);
 
         return ResponseEntity.ok(result);
     }

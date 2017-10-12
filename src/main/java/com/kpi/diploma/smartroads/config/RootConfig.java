@@ -49,7 +49,6 @@ public class RootConfig {
         props.put("mail.smtp.host", environment.getProperty("email.host"));
         props.put("mail.smtp.port", environment.getProperty("email.port"));
         log.info("email props'{}'", props);
-        log.info("email.password'{}'", environment.getProperty("email.password"));
 
         return Session.getInstance(props, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {

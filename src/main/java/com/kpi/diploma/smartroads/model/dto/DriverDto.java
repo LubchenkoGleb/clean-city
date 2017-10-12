@@ -2,19 +2,22 @@ package com.kpi.diploma.smartroads.model.dto;
 
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
-public class DriverDto {
+@Slf4j
+public class DriverDto extends UserDto {
 
     String firstName;
     String lastName;
-    String email;
 
-    public static DriverDto convert(Driver driver) {
+    public static DriverDto convertToDriverDto(Driver driver) {
+        log.info("'convert' invoked with params'{}'", driver);
         DriverDto driverDto = new DriverDto();
-        driverDto.setEmail(driver.getEmail());
         driverDto.setFirstName(driver.getFirstName());
         driverDto.setLastName(driver.getLastName());
+        driverDto.setEmail(driver.getEmail());
+        driverDto.setAvatarUrl(driver.getAvatarUrl());
         return driverDto;
     }
 }

@@ -82,12 +82,17 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private List<Driver> testDrivers() {
+        Role driverRole = roleRepository.findByRole(Constants.ROLE_DRIVER);
+
         ArrayList<Driver> drivers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Driver driver = new Driver();
-            driver.setEmail("driver" + i + "@driver.com");
+            driver.setEmail("driver" + i + "@email.com");
             driver.setFirstName("driver" + i + "_firstName");
             driver.setLastName("driver" + i + "_lastName");
+            driver.setPassword(passwordEncoder.encode("driver" + i));
+            driver.setEnable(true);
+            driver.getRoles().add(driverRole);
             driver = driverRepository.save(driver);
             drivers.add(driver);
         }
@@ -95,12 +100,17 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private List<Manager> testManagers() {
+        Role managerRole = roleRepository.findByRole(Constants.ROLE_MANGER);
+
         ArrayList<Manager> managers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Manager manager = new Manager();
-            manager.setEmail("manager" + i + "@manager.com");
+            manager.setEmail("manager" + i + "@email.com");
             manager.setFirstName("manager" + i + "_firstName");
             manager.setLastName("manager" + i + "_lastName");
+            manager.setPassword(passwordEncoder.encode("manager" + i));
+            manager.setEnable(true);
+            manager.getRoles().add(managerRole);
             manager = managerRepository.save(manager);
             managers.add(manager);
         }

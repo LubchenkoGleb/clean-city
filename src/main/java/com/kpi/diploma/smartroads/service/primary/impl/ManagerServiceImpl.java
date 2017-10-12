@@ -1,10 +1,10 @@
-package com.kpi.diploma.smartroads.service.main.impl;
+package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.exception.IncorrectInviteKey;
 import com.kpi.diploma.smartroads.repository.ManagerRepository;
-import com.kpi.diploma.smartroads.service.main.ManagerService;
+import com.kpi.diploma.smartroads.service.primary.ManagerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

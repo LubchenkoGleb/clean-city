@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
-import com.kpi.diploma.smartroads.service.main.UserService;
+import com.kpi.diploma.smartroads.service.primary.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,11 @@
-package com.kpi.diploma.smartroads.service.main.impl;
+package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.dto.MapObjectDto;
 import com.kpi.diploma.smartroads.repository.MapObjectRepository;
 import com.kpi.diploma.smartroads.repository.UserRepository;
-import com.kpi.diploma.smartroads.service.main.MapObjectService;
+import com.kpi.diploma.smartroads.service.primary.MapObjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

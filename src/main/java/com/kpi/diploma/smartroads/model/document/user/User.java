@@ -39,6 +39,8 @@ public class User {
     @CreatedDate
     private String createdDate;
 
+    private String avatarUrl;
+
     private Set<Role> roles;
 
     public User() {
