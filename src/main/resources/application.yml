@@ -31,11 +31,11 @@ security:
     resource:
       filter-order: 3
 
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        web: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
 
 #  devtools:
 #    remote:
