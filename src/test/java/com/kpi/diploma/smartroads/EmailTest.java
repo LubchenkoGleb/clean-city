@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.mail.MessagingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -21,9 +22,9 @@ public class EmailTest {
 
     @Test
     @Ignore
-    public void test_emailSend() throws MessagingException {
+    public void test_emailSend() {
         EmailMessage testMessage = new EmailMessage(
-                "gleb_lubchenko@ukr.net",
+                "gleb.lubchenko@gmail.com",
                 "test",
                 "<!DOCTYPE html> " +
                 "<html> " +
@@ -42,4 +43,13 @@ public class EmailTest {
         boolean isSend = emailService.send(testMessage);
         Assert.assertTrue(isSend);
     }
+
+//    @Test
+//    public void test_regex() {
+//        String url =  "https://res.cloudinary.com/demo/image/upload/v1375302801/tquyfignx5bxcbsupr6a.jpg";
+//        Matcher matcher = Pattern.compile("[^/]*(?=[.][a-zA-Z]+$)").matcher(url);
+//        if(matcher.find()) System.out.println("+++");
+//        String id = Pattern.compile("[^/]*(?=[.][a-zA-Z]+$)").matcher(url).group(1);
+//        System.out.println(id);
+//    }
 }

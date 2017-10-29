@@ -8,4 +8,6 @@ public interface UserService {
     boolean existByEmail(String email);
 
     UserDto setAvatar(String userId, MultipartFile multipartFile) throws Exception;
+
+    UserDto deleteAvatar(String userId);
 }

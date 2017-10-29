@@ -10,16 +10,13 @@ spring:
     host: 127.0.0.1
     port: 6379
 
-  social:
-    facebook:
-      appId: ${CLEAN_CITY_FACEBOOK_API_ID}
-      appSecret: ${CLEAN_CITY_FACEBOOK_APP_SERCRET}
+social:
+  facebook:
+    appId: ${CLEAN_CITY_FACEBOOK_API_ID}
+    appSecret: ${CLEAN_CITY_FACEBOOK_APP_SERCRET}
 
-email:
-  username: gleb.lubchenko@gmail.com
-  password: ${CLEAN_CITY_EMAIL_PASSWORD}
-  host: smtp.gmail.com
-  port: 587
+sendgrid:
+  key: ${CLEAN_CITY_SENDGRID_KEY}
 
 cloudinary:
   name: clean-city
@@ -31,11 +28,14 @@ security:
     resource:
       filter-order: 3
 
-logging:
-  level:
-    org:
-      springframework:
-        web: DEBUG
+client:
+ url: https://cleancity-web.herokuapp.com
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
 
 #  devtools:
 #    remote:

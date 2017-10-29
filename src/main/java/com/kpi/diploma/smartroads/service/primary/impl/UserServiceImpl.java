@@ -2,6 +2,7 @@ package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.dto.UserDto;
+import com.kpi.diploma.smartroads.model.exception.ImageServiceException;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import com.kpi.diploma.smartroads.service.primary.UserService;
 import com.kpi.diploma.smartroads.service.util.image.ImageService;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public UserDto setAvatar(String userId, MultipartFile multipartFile) throws Exception {
         log.info("'setAvatar' invoked with params'{}, {}'", userId, multipartFile.getOriginalFilename());
 
-        String avatarUrl = imageService.uploadAvatar(userId, multipartFile);
+        String avatarUrl = imageService.uploadImage(multipartFile);
         User user = userRepository.findOne(userId);
         user.setAvatarUrl(avatarUrl);
         user = userRepository.save(user);
@@ -45,5 +46,26 @@ public class UserServiceImpl implements UserService {
         log.info("'userDto={}'", userDto);
 
         return userDto;
+    }
+
+    @Override
+    public UserDto deleteAvatar(String userId) {
+        log.info("'deleteAvatar' invoked with params'{}'", userId);
+
+        User user = userRepository.findOne(userId);
+        if(user.getAvatarUrl() == null) {
+            throw new ImageServiceException("user doesn't has avatar");
+        }
+        Boolean result = imageService.deleteImage(user.getAvatarUrl());
+
+        if(result) {
+            user.setAvatarUrl(null);
+            user = userRepository.save(user);
+            UserDto userDto = UserDto.convert(user);
+            log.info("'userDto={}'", userDto);
+            return userDto;
+        } else {
+            throw new ImageServiceException("avatar wasn't deleted");
+        }
     }
 }

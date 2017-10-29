@@ -32,10 +32,12 @@ public class SocialSignInAdapter implements SignInAdapter {
 
     @Override
     public String signIn(String localUserId, Connection<?> connection, NativeWebRequest request) {
+        log.info("'signIn' invoked with params'{}'", localUserId);
+
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(
                         connection.getDisplayName(), null,
-                        Arrays.asList(new SimpleGrantedAuthority("FACEBOOK_USER"))));
+                        Collections.singletonList(new SimpleGrantedAuthority("FACEBOOK_USER"))));
 
         UserDetails userDetails = mongoUserDetailsService.loadUserByUsername(localUserId);
         String authority = createAuthority(userDetails);
@@ -45,6 +47,7 @@ public class SocialSignInAdapter implements SignInAdapter {
     }
 
     public String createAuthority(UserDetails userDetails) {
+        log.info("'createAuthority' invoked with params'{}'", userDetails);
 
         Map<String, String> requestParameters = new HashMap<>();
         Map<String, Serializable> extensionProperties = new HashMap<>();
@@ -53,7 +56,6 @@ public class SocialSignInAdapter implements SignInAdapter {
         Set<String> responseTypes = new HashSet<>();
         responseTypes.add("code");
 
-        // Authorities
         OAuth2Request oauth2Request = new OAuth2Request(
                 requestParameters,
                 "my-trusted-client",

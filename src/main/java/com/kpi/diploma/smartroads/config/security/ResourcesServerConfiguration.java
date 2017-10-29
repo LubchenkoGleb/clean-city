@@ -65,17 +65,17 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 .permitAll()
                 .anyRequest()
                 .authenticated()
-                .and()
-                .apply(getSpringSocialConfigurer());
+                .and();
+//                .apply(getSpringSocialConfigurer());
     }
 
-    private SpringSocialConfigurer getSpringSocialConfigurer() {
-        SpringSocialConfigurer config = new SpringSocialConfigurer();
-        config.alwaysUsePostLoginUrl(true);
-        config.postLoginUrl("/home");
-
-        return config;
-    }
+//    private SpringSocialConfigurer getSpringSocialConfigurer() {
+//        SpringSocialConfigurer config = new SpringSocialConfigurer();
+////        config.alwaysUsePostLoginUrl(true);
+////        config.postLoginUrl("/home");
+//
+//        return config;
+//    }
 
     @Bean
     public ProviderSignInController providerSignInController() {
@@ -87,7 +87,7 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 usersConnectionRepository,
                 new SocialSignInAdapter(configuration, userDetailsService));
 
-        providerSignInController.setPostSignInUrl("/after-redirect-controller/social-get-token");
+//        providerSignInController.setPostSignInUrl("/after-redirect-controller/social-get-token");
 
         return providerSignInController;
     }

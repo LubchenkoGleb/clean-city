@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import java.util.List;
 
 @Slf4j
@@ -30,7 +29,7 @@ public class CompanyController {
     @PostMapping(value = "/create-driver")
     private ResponseEntity<RegistrationDriverDto> createDriver(
             @RequestBody RegistrationDriverDto driverDto,
-            @AuthenticationPrincipal MongoUserDetails principal) throws MessagingException {
+            @AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'createDriver' invoked with params'{}, {}'", driverDto, principal);
 
         RegistrationDriverDto driver = companyService.createDriver(principal.getUserId(), driverDto);
@@ -42,7 +41,7 @@ public class CompanyController {
     @PostMapping(value = "/create-manager")
     private ResponseEntity<RegistrationManagerDto> createManager(
             @RequestBody RegistrationManagerDto managerDto,
-            @AuthenticationPrincipal MongoUserDetails principal) throws MessagingException {
+            @AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'createManager' invoked with params'{}, {}'", managerDto, principal);
 
         RegistrationManagerDto manager = companyService.createManager(principal.getUserId(), managerDto);

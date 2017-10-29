@@ -1,18 +1,30 @@
 package com.kpi.diploma.smartroads.model.dto;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class UserDto {
 
-    String email;
-    String avatarUrl;
+    private String email;
+    private String avatarUrl;
+    protected static final ObjectMapper mapper;
 
-    public static UserDto convert(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setEmail(user.getEmail());
-        userDto.setAvatarUrl(user.getAvatarUrl());
+    static {
+        mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    public static UserDto convert(Object object) {
+        log.info("'convert' invoked with params'{}'", object);
+
+        UserDto userDto = mapper.convertValue(object, UserDto.class);
+        log.info("'userDto={}'", userDto);
+
         return userDto;
     }
 }

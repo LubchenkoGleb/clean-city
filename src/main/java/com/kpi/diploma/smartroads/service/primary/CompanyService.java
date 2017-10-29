@@ -5,14 +5,13 @@ import com.kpi.diploma.smartroads.model.dto.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
 
-import javax.mail.MessagingException;
 import java.util.List;
 
 public interface CompanyService {
 
-    RegistrationDriverDto createDriver(String userName, RegistrationDriverDto driver) throws MessagingException;
+    RegistrationDriverDto createDriver(String userName, RegistrationDriverDto driver);
 
-    RegistrationManagerDto createManager(String userName, RegistrationManagerDto manager) throws MessagingException;
+    RegistrationManagerDto createManager(String userName, RegistrationManagerDto manager);
 
     List<DriverDto> getDrivers(String companyId);
 

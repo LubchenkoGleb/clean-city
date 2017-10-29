@@ -1,42 +1,45 @@
 package com.kpi.diploma.smartroads.service.util.email;
 
+import com.kpi.diploma.smartroads.model.exception.EmailException;
 import com.kpi.diploma.smartroads.model.util.EmailMessage;
+import com.sendgrid.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 
 @Slf4j
 @Service
 public class EmailService {
 
-    private final Session session;
-    private final Environment environment;
+    private final SendGrid sendGrid;
 
     @Autowired
-    public EmailService(Session session, Environment environment) {
-        this.session = session;
-        this.environment = environment;
+    public EmailService(SendGrid sendGrid) {
+        this.sendGrid = sendGrid;
     }
 
-    public boolean send(EmailMessage email) throws MessagingException {
+    public boolean send(EmailMessage email) {
         log.info("'sendEmail' invoked with param: '{}'", email);
 
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress(environment.getProperty("email.username")));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getTo()));
-        message.setSubject(email.getSubject());
-        message.setContent(email.getMessage(), "text/html; charset=utf-8");
-        log.info("'message={}'", message);
-        Transport.send(message);
+        Email from = new Email("no-reply@cleancity-web.herokuapp.com");
+        Email to = new Email(email.getTo());
+        Content content = new Content("text/html", email.getMessage());
+        Mail mail = new Mail(from, email.getSubject(), to, content);
 
+        Request request = new Request();
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            Response response = sendGrid.api(request);
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+            System.out.println(response.getHeaders());
+        } catch (IOException ex) {
+            throw new EmailException("email wasn't sent");
+        }
         return true;
     }
 }
