@@ -1,7 +1,5 @@
 package com.kpi.diploma.smartroads.model.dto;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kpi.diploma.smartroads.model.document.user.Driver;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 

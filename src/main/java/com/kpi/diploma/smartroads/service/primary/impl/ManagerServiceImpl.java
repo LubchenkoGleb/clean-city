@@ -1,8 +1,9 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.user.Manager;
+import com.kpi.diploma.smartroads.model.dto.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
-import com.kpi.diploma.smartroads.model.exception.IncorrectInviteKey;
+import com.kpi.diploma.smartroads.model.util.exception.IncorrectInviteKey;
 import com.kpi.diploma.smartroads.repository.ManagerRepository;
 import com.kpi.diploma.smartroads.service.primary.ManagerService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +26,10 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public RegistrationManagerDto registerManager(RegistrationManagerDto registrationManagerDto) {
+    public ManagerDto registerManager(RegistrationManagerDto registrationManagerDto) {
         log.info("'registerManager' invoked with params'{}'", registrationManagerDto);
 
-        Manager managerEntity = managerRepository.findByInviteKey(registrationManagerDto.getInviteUrl());
+        Manager managerEntity = managerRepository.findByInviteKey(registrationManagerDto.getInviteKey());
 
         if (managerEntity == null || !managerEntity.getEmail().equals(registrationManagerDto.getEmail())) {
             String errMsg = "inviteKey not found or doesn't belong to email";
@@ -43,6 +44,6 @@ public class ManagerServiceImpl implements ManagerService {
         managerEntity = managerRepository.save(managerEntity);
         log.info("'managerEntity={}'", managerEntity);
 
-        return registrationManagerDto;
+        return ManagerDto.convert(managerEntity);
     }
 }

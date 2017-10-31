@@ -1,6 +1,6 @@
 --------------------------MONGO-----------------------
 mongodb
-@DebRef - annotation for child referenced mapping
+@DBRef - annotation for child referenced mapping
 show dbs
 db
 use (dbname)

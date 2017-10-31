@@ -1,7 +1,6 @@
-package com.kpi.diploma.smartroads.rest.social;
+package com.kpi.diploma.smartroads.rest.util.social;
 
 import lombok.extern.slf4j.Slf4j;
-import org.codehaus.jackson.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.connect.Connection;

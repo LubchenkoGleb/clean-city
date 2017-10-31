@@ -1,5 +1,6 @@
-package com.kpi.diploma.smartroads.model.exception;
+package com.kpi.diploma.smartroads.model.util.exception;
 
+import com.kpi.diploma.smartroads.model.util.data.ErrorMessage;
 import lombok.Data;
 
 @Data

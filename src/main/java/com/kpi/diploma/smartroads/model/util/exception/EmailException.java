@@ -1,4 +1,6 @@
-package com.kpi.diploma.smartroads.model.exception;
+package com.kpi.diploma.smartroads.model.util.exception;
+
+import com.kpi.diploma.smartroads.model.util.data.ErrorMessage;
 
 public class EmailException extends RuntimeException {
 

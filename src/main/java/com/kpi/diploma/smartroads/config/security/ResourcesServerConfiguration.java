@@ -2,7 +2,7 @@ package com.kpi.diploma.smartroads.config.security;
 
 import com.kpi.diploma.smartroads.config.social.SocialConnectionSignup;
 import com.kpi.diploma.smartroads.config.social.SocialSignInAdapter;
-import com.kpi.diploma.smartroads.service.security.MongoUserDetailsService;
+import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInController;
-import org.springframework.social.security.SpringSocialConfigurer;
 
 @Configuration
 @EnableResourceServer

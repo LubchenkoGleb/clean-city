@@ -8,8 +8,8 @@ import com.kpi.diploma.smartroads.model.dto.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
-import com.kpi.diploma.smartroads.model.title.Constants;
-import com.kpi.diploma.smartroads.model.util.EmailMessage;
+import com.kpi.diploma.smartroads.model.util.data.EmailMessage;
+import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.CompanyRepository;
 import com.kpi.diploma.smartroads.repository.DriverRepository;
 import com.kpi.diploma.smartroads.repository.ManagerRepository;
@@ -67,16 +67,17 @@ public class CompanyServiceImpl implements CompanyService {
         emailService.send(emailMessage);
         log.info("email sent successfully");
 
-        Role driverRole = roleRepository.findByRole(Constants.ROLE_DRIVER);
+        Role driverRole = roleRepository.findByRole(RoleValues.DRIVER);
+        Company company = companyRepository.findOne(companyId);
 
         Driver driverEntity = new Driver();
         driverEntity.setEmail(driver.getEmail());
         driverEntity.getRoles().add(driverRole);
         driverEntity.setInviteKey(inviteKey);
+        driverEntity.setBoss(company);
         driverEntity = driverRepository.save(driverEntity);
         log.info("'driverEntity={}'", driverEntity);
 
-        Company company = companyRepository.findOne(companyId);
         company.getDrivers().add(driverEntity);
         companyRepository.save(company);
 
@@ -94,16 +95,17 @@ public class CompanyServiceImpl implements CompanyService {
         emailService.send(emailMessage);
         log.info("email is sent");
 
-        Role managerRole = roleRepository.findByRole(Constants.ROLE_MANGER);
+        Role managerRole = roleRepository.findByRole(RoleValues.MANAGER);
+        Company company = companyRepository.findOne(companyId);
 
         Manager managerEntity = new Manager();
         managerEntity.setEmail(manager.getEmail());
         managerEntity.getRoles().add(managerRole);
         managerEntity.setInviteKey(inviteKey);
+        managerEntity.setBoss(company);
         managerEntity = managerRepository.save(managerEntity);
         log.info("'managerEntity={}'", managerEntity);
 
-        Company company = companyRepository.findOne(companyId);
         company.getManagers().add(managerEntity);
         companyRepository.save(company);
 

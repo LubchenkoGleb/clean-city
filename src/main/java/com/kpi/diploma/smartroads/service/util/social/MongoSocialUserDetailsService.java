@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.service.social;
+package com.kpi.diploma.smartroads.service.util.social;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

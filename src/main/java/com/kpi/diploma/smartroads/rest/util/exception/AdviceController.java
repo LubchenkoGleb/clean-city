@@ -1,6 +1,7 @@
-package com.kpi.diploma.smartroads.rest.exception;
+package com.kpi.diploma.smartroads.rest.util.exception;
 
-import com.kpi.diploma.smartroads.model.exception.*;
+import com.kpi.diploma.smartroads.model.util.exception.*;
+import com.kpi.diploma.smartroads.model.util.data.ErrorMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public class AdviceController {
     @ExceptionHandler(IncorrectInputDataException.class)
     public ResponseEntity<ErrorMessage> handleIncorrectInputDataException(
             HttpServletRequest request, IncorrectInputDataException ex) {
-        log.error("'handleIncorrectInputDataException' invoked for url'{}'", request.getRequestURL());
+        log.error("'handleIncorrectInputDataException' invoked for imageUrl'{}'", request.getRequestURL());
         log.error("'exceptionMessage={}'", ex.getErrorMessage());
         return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -25,7 +26,7 @@ public class AdviceController {
     @ExceptionHandler(IncorrectInviteKey.class)
     public ResponseEntity<ErrorMessage> handleIncorrectInviteUrl(
             HttpServletRequest request, IncorrectInviteKey ex) {
-        log.error("'handleIncorrectInviteUrl' invoked for url'{}'", request.getRequestURL());
+        log.error("'handleIncorrectInviteUrl' invoked for imageUrl'{}'", request.getRequestURL());
         log.error("'exceptionMessage={}'", ex.getErrorMessage());
         return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -33,7 +34,7 @@ public class AdviceController {
     @ExceptionHandler(EmailException.class)
     public ResponseEntity<ErrorMessage> handleEmailException(
             HttpServletRequest request, EmailException ex) {
-        log.error("'handleEmailException' invoked for url'{}'", request.getRequestURL());
+        log.error("'handleEmailException' invoked for imageUrl'{}'", request.getRequestURL());
         log.error("'exceptionMessage={}'", ex.getMessage());
         ex.printStackTrace();
         ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), ex.getClass().getCanonicalName());
@@ -43,7 +44,7 @@ public class AdviceController {
     @ExceptionHandler(ImageServiceException.class)
     public ResponseEntity<ErrorMessage> handleImageServiceExceptions(
             HttpServletRequest request, ImageServiceException ex) {
-        log.error("'handleImageServiceExceptions' invoked for url'{}'", request.getRequestURL());
+        log.error("'handleImageServiceExceptions' invoked for imageUrl'{}'", request.getRequestURL());
         log.error("'exceptionMessage={}'", ex.getMessage());
         ex.printStackTrace();
         return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
@@ -53,7 +54,7 @@ public class AdviceController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOtherExceptions(
             HttpServletRequest request, Exception ex) {
-        log.error("'handleOtherExceptions' invoked for url'{}'", request.getRequestURL());
+        log.error("'handleOtherExceptions' invoked for imageUrl'{}'", request.getRequestURL());
         log.error("'exceptionMessage={}'", ex.getMessage());
         ex.printStackTrace();
         ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), ex.getClass().getSimpleName());

@@ -30,8 +30,8 @@ public class ImageService {
         Map upload = cloudinary.uploader().upload(multipartFile.getBytes(), ObjectUtils.emptyMap());
         log.info("'upload={}'", upload);
 
-        String url = upload.get("url").toString();
-        log.info("'url={}'", url);
+        String url = upload.get("imageUrl").toString();
+        log.info("'imageUrl={}'", url);
 
         return url;
     }

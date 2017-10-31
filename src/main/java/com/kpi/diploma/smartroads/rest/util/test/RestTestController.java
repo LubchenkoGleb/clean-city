@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.rest.util;
+package com.kpi.diploma.smartroads.rest.util.test;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

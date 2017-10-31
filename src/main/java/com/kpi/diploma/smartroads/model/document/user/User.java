@@ -2,6 +2,7 @@ package com.kpi.diploma.smartroads.model.document.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kpi.diploma.smartroads.model.document.Role;
+import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.service.util.validation.PasswordMatches;
 import com.kpi.diploma.smartroads.service.util.validation.ValidateEmail;
 import lombok.Data;
@@ -51,5 +52,9 @@ public class User {
         this();
         this.email = email;
         this.password = password;
+    }
+
+    public boolean hasRole(String role) {
+        return this.roles.stream().anyMatch(r -> r.getRole().equals(role));
     }
 }

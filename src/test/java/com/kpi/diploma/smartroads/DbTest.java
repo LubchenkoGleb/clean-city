@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
-import com.kpi.diploma.smartroads.model.title.Documents;
+import com.kpi.diploma.smartroads.model.util.title.Documents;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import com.mongodb.DBCollection;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 

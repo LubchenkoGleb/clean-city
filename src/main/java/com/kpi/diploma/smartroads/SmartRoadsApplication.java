@@ -4,7 +4,7 @@ import com.kpi.diploma.smartroads.model.document.Role;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
-import com.kpi.diploma.smartroads.model.title.Constants;
+import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private void initCompanies() {
-        Role companyRole = roleRepository.findByRole(Constants.ROLE_COMPANY);
+        Role companyRole = roleRepository.findByRole(RoleValues.COMPANY);
 
         companyRepository.deleteAll();
         Company company = new Company();
@@ -82,7 +82,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private List<Driver> testDrivers() {
-        Role driverRole = roleRepository.findByRole(Constants.ROLE_DRIVER);
+        Role driverRole = roleRepository.findByRole(RoleValues.DRIVER);
 
         ArrayList<Driver> drivers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
@@ -100,7 +100,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private List<Manager> testManagers() {
-        Role managerRole = roleRepository.findByRole(Constants.ROLE_MANGER);
+        Role managerRole = roleRepository.findByRole(RoleValues.MANAGER);
 
         ArrayList<Manager> managers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {

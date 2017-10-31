@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model.security;
+package com.kpi.diploma.smartroads.model.util.security;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
 import lombok.extern.slf4j.Slf4j;

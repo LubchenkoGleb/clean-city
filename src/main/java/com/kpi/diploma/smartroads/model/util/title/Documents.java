@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model.title;
+package com.kpi.diploma.smartroads.model.util.title;
 
 public class Documents {
     public static final String USER = "user";

@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model.util;
+package com.kpi.diploma.smartroads.model.util.data;
 
 import lombok.Data;
 

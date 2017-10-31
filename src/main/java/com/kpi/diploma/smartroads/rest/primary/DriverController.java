@@ -1,5 +1,6 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
+import com.kpi.diploma.smartroads.model.dto.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.service.primary.DriverService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +24,12 @@ public class DriverController {
     }
 
     @PostMapping(value = "/confirm")
-    private ResponseEntity<RegistrationDriverDto> confirmProfile(@RequestBody RegistrationDriverDto registrationDriverDto) {
+    private ResponseEntity<DriverDto> confirmProfile(@RequestBody RegistrationDriverDto registrationDriverDto) {
         log.info("'confirmProfile' invoked with params'{}'", registrationDriverDto);
 
-        registrationDriverDto = driverService.registerDriver(registrationDriverDto);
-        log.info("'registrationDriverDto={}'", registrationDriverDto);
+        DriverDto driverDto = driverService.registerDriver(registrationDriverDto);
+        log.info("'driverDto={}'", driverDto);
 
-        return ResponseEntity.ok(registrationDriverDto);
+        return ResponseEntity.ok(driverDto);
     }
 }

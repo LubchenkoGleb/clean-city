@@ -1,7 +1,10 @@
 package com.kpi.diploma.smartroads.model.document;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
+import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class MapObject {
@@ -10,7 +13,7 @@ public class MapObject {
 
     private Double lon;
 
-    private String imageUrl;
+    private User owner;
 
-    private User creator;
+    private List<MapObjectDetail> details;
 }

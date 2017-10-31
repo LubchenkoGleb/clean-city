@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.config.security;
 
-import com.kpi.diploma.smartroads.service.security.MongoUserDetailsService;
+import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -29,7 +29,7 @@ security:
       filter-order: 3
 
 client:
- url: https://cleancity-web.herokuapp.com
+ url: https://cleancity-web.herokuapp.com/signup/
 
 #logging:
 #  level:

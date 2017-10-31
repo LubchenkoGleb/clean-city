@@ -1,7 +1,7 @@
-package com.kpi.diploma.smartroads.service.security;
+package com.kpi.diploma.smartroads.service.util.security;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
-import com.kpi.diploma.smartroads.model.security.MongoUserDetails;
+import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

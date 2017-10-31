@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.service.util.email;
 
-import com.kpi.diploma.smartroads.model.exception.EmailException;
-import com.kpi.diploma.smartroads.model.util.EmailMessage;
+import com.kpi.diploma.smartroads.model.util.exception.EmailException;
+import com.kpi.diploma.smartroads.model.util.data.EmailMessage;
 import com.sendgrid.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

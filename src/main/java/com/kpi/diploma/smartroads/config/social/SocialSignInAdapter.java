@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.config.social;
 
-import com.kpi.diploma.smartroads.service.security.MongoUserDetailsService;
+import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
