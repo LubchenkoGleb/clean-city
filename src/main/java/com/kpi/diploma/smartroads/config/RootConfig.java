@@ -10,12 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Slf4j
 @Configuration
 @EnableMongoAuditing
+@EnableWebSocket
 public class RootConfig implements WebSocketConfigurer {
 
     @Override

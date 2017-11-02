@@ -36,7 +36,9 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                         "/is-alive/welcome-page",
                         "/is-alive-rest/test",
                         "/driver-requests/confirm",
-                        "/manager-requests/confirm")
+                        "/manager-requests/confirm",
+                        "/echo.html",
+                        "/echo/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
