@@ -57,9 +57,9 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
     private void initRoles() {
         roleRepository.deleteAll();
-        Role roleCompany = new Role("COMPANY");
-        Role roleDriver = new Role("DRIVER");
-        Role roleManager = new Role("MANAGER");
+        Role roleCompany = new Role(RoleValues.COMPANY);
+        Role roleDriver = new Role(RoleValues.DRIVER);
+        Role roleManager = new Role(RoleValues.MANAGER);
         roleRepository.save(roleCompany);
         roleRepository.save(roleDriver);
         roleRepository.save(roleManager);
@@ -92,6 +92,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
             driver.setLastName("driver" + i + "_lastName");
             driver.setPassword(passwordEncoder.encode("driver" + i));
             driver.setEnable(true);
+//            driver.setBoss(company);
             driver.getRoles().add(driverRole);
             driver = driverRepository.save(driver);
             drivers.add(driver);
@@ -110,6 +111,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
             manager.setLastName("manager" + i + "_lastName");
             manager.setPassword(passwordEncoder.encode("manager" + i));
             manager.setEnable(true);
+//            manager.setBoss(company);
             manager.getRoles().add(managerRole);
             manager = managerRepository.save(manager);
             managers.add(manager);

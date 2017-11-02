@@ -2,6 +2,7 @@ package com.kpi.diploma.smartroads.model.document.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "user")
 @ToString(exclude = {"boss"})
+@EqualsAndHashCode(exclude = {"boss"})
 public class Manager extends User {
 
     private String inviteKey;

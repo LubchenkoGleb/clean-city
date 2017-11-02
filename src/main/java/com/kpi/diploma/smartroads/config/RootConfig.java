@@ -10,11 +10,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Slf4j
 @Configuration
 @EnableMongoAuditing
-public class RootConfig {
+public class RootConfig implements WebSocketConfigurer {
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new SimpleWebSocketHandler(), "/echo").withSockJS();
+    }
 
     private final Environment environment;
 
@@ -41,21 +48,4 @@ public class RootConfig {
     public SendGrid getSendGrid() {
         return new SendGrid(environment.getProperty("sendgrid.key"));
     }
-
-//    @Bean
-//    public Session connectToSmtp() {
-//        Properties props = new Properties();
-//        props.put("mail.smtp.auth", "true");
-//        props.put("mail.smtp.starttls.enable", "true");
-//        props.put("mail.smtp.host", environment.getProperty("email.host"));
-//        props.put("mail.smtp.port", environment.getProperty("email.port"));
-//        log.info("email props'{}'", props);
-//
-//        return Session.getInstance(props, new Authenticator() {
-//            protected PasswordAuthentication getPasswordAuthentication() {
-//                return new PasswordAuthentication(environment.getProperty("email.username"),
-//                        environment.getProperty("email.password"));
-//            }
-//        });
-//    }
 }

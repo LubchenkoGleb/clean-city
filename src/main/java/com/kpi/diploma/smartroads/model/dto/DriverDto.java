@@ -9,6 +9,7 @@ public class DriverDto extends UserDto {
 
     String firstName;
     String lastName;
+    String accessToken;
 
     public static DriverDto convert(Object object) {
         log.info("'convert' invoked with params'{}'", object);

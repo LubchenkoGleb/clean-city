@@ -1,79 +1,27 @@
-package com.kpi.diploma.smartroads.config.social;
-
-import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
-import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.web.SignInAdapter;
-import org.springframework.web.context.request.NativeWebRequest;
-
-import java.io.Serializable;
-import java.util.*;
-
-@Slf4j
-public class SocialSignInAdapter implements SignInAdapter {
-
-    private AuthorizationServerEndpointsConfiguration configuration;
-    private MongoUserDetailsService mongoUserDetailsService;
-
-    public SocialSignInAdapter(AuthorizationServerEndpointsConfiguration configuration,
-                               MongoUserDetailsService mongoUserDetailsService) {
-        this.configuration = configuration;
-        this.mongoUserDetailsService = mongoUserDetailsService;
-    }
-
-    @Override
-    public String signIn(String localUserId, Connection<?> connection, NativeWebRequest request) {
-        log.info("'signIn' invoked with params'{}'", localUserId);
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        connection.getDisplayName(), null,
-                        Collections.singletonList(new SimpleGrantedAuthority("FACEBOOK_USER"))));
-
-        UserDetails userDetails = mongoUserDetailsService.loadUserByUsername(localUserId);
-        String authority = createAuthority(userDetails);
-        log.info("'authority={}'", authority);
-
-        return "/after-redirect-controller/social-get-token/" + authority;
-    }
-
-    public String createAuthority(UserDetails userDetails) {
-        log.info("'createAuthority' invoked with params'{}'", userDetails);
-
-        Map<String, String> requestParameters = new HashMap<>();
-        Map<String, Serializable> extensionProperties = new HashMap<>();
-
-        boolean approved = true;
-        Set<String> responseTypes = new HashSet<>();
-        responseTypes.add("code");
-
-        OAuth2Request oauth2Request = new OAuth2Request(
-                requestParameters,
-                "my-trusted-client",
-                userDetails.getAuthorities(),
-                approved,
-                new HashSet<>(),
-                new HashSet<>(Arrays.asList("resourceIdTest")),
-                null,
-                responseTypes,
-                extensionProperties);
-
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails.getUsername(), "N/A", userDetails.getAuthorities());
-
-        OAuth2Authentication auth = new OAuth2Authentication(oauth2Request, authenticationToken);
-        AuthorizationServerTokenServices tokenService = configuration.getEndpointsConfigurer().getTokenServices();
-        OAuth2AccessToken token = tokenService.createAccessToken(auth);
-
-        return token.getValue();
-    }
-}
+//package com.kpi.diploma.smartroads.config.social;
+//
+//import com.kpi.diploma.smartroads.service.util.security.TokenService;
+//import lombok.extern.slf4j.Slf4j;
+//import org.springframework.social.connect.Connection;
+//import org.springframework.social.connect.web.SignInAdapter;
+//import org.springframework.web.context.request.NativeWebRequest;
+//
+//@Slf4j
+//public class SocialSignInAdapter implements SignInAdapter {
+//
+//    private TokenService tokenService;
+//
+//    public SocialSignInAdapter(TokenService tokenService) {
+//        this.tokenService = tokenService;
+//    }
+//
+//    @Override
+//    public String signIn(String localUserId, Connection<?> connection, NativeWebRequest request) {
+//        log.info("'signIn' invoked with params'{}'", localUserId);
+//
+//        String authority = tokenService.getToken(localUserId);
+//        log.info("'authority={}'", authority);
+//
+//        return "/after-redirect-controller/social-get-token/" + authority;
+//    }
+//}

@@ -49,7 +49,7 @@ public class MapObjectServiceImpl implements MapObjectService {
         }
         log.info("'owner={}'", owner);
 
-        MapObject mapObject = mapObjectDto.convert(mapObjectDto);
+        MapObject mapObject = MapObjectDto.convert(mapObjectDto);
         mapObject.setOwner(owner);
         mapObject = mapObjectRepository.save(mapObject);
         log.info("'mapObject={}'", mapObject);

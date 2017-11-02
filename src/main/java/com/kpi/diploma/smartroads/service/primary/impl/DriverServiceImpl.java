@@ -6,6 +6,8 @@ import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInviteKey;
 import com.kpi.diploma.smartroads.repository.DriverRepository;
 import com.kpi.diploma.smartroads.service.primary.DriverService;
+import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
+import com.kpi.diploma.smartroads.service.util.security.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,14 @@ public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
-    public DriverServiceImpl(DriverRepository driverRepository, PasswordEncoder passwordEncoder) {
+    public DriverServiceImpl(DriverRepository driverRepository,
+                             PasswordEncoder passwordEncoder,
+                             TokenService tokenService) {
         this.driverRepository = driverRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -43,7 +49,9 @@ public class DriverServiceImpl implements DriverService {
         driverEntity = driverRepository.save(driverEntity);
         log.info("'driverEntity={}'", driverEntity);
 
-        return DriverDto.convert(driverEntity);
+        DriverDto driverDto = DriverDto.convert(driverEntity);
+        driverDto.setAccessToken(tokenService.getToken(driverDto.getEmail()));
+        return driverDto;
     }
 
     @Override

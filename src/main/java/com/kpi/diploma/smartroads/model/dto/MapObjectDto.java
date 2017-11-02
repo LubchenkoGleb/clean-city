@@ -16,7 +16,7 @@ public class MapObjectDto {
 
     private Double lat;
     private Double lon;
-    private User owner;
+//    private User owner;
     private List<MapObjectDetail> details;
     protected static final ObjectMapper mapper;
 

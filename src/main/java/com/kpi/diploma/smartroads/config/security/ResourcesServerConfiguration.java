@@ -1,42 +1,14 @@
 package com.kpi.diploma.smartroads.config.security;
 
-import com.kpi.diploma.smartroads.config.social.SocialConnectionSignup;
-import com.kpi.diploma.smartroads.config.social.SocialSignInAdapter;
-import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.connect.web.ProviderSignInController;
 
 @Configuration
 @EnableResourceServer
 public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapter {
-
-    private final ConnectionFactoryLocator connectionFactoryLocator;
-    private final UsersConnectionRepository usersConnectionRepository;
-    private final SocialConnectionSignup socialConnectionSignup;
-    private final MongoUserDetailsService userDetailsService;
-    private final AuthorizationServerEndpointsConfiguration configuration;
-
-    @Autowired
-    public ResourcesServerConfiguration(ConnectionFactoryLocator connectionFactoryLocator,
-                                        UsersConnectionRepository usersConnectionRepository,
-                                        SocialConnectionSignup socialConnectionSignup,
-                                        MongoUserDetailsService userDetailsService,
-                                        AuthorizationServerEndpointsConfiguration configuration) {
-        this.connectionFactoryLocator = connectionFactoryLocator;
-        this.usersConnectionRepository = usersConnectionRepository;
-        this.socialConnectionSignup = socialConnectionSignup;
-        this.userDetailsService = userDetailsService;
-        this.configuration = configuration;
-    }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -52,6 +24,10 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 .disable()
                 .authorizeRequests()
                 .antMatchers(
+                        "/company-requests/create-driver",
+                        "/company-requests/create-manager")
+                .hasRole("COMPANY")
+                .antMatchers(
                         "/",
                         "/registration/**",
                         "/connect/**",
@@ -65,29 +41,20 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 .anyRequest()
                 .authenticated()
                 .and();
-//                .apply(getSpringSocialConfigurer());
     }
 
-//    private SpringSocialConfigurer getSpringSocialConfigurer() {
-//        SpringSocialConfigurer config = new SpringSocialConfigurer();
-////        config.alwaysUsePostLoginUrl(true);
-////        config.postLoginUrl("/home");
+//    @Bean
+//    public ProviderSignInController providerSignInController() {
+//        usersConnectionRepository
+//                .setConnectionSignUp(socialConnectionSignup);
 //
-//        return config;
+//        ProviderSignInController providerSignInController = new ProviderSignInController(
+//                connectionFactoryLocator,
+//                usersConnectionRepository,
+//                new SocialSignInAdapter(tokenService));
+//
+////        providerSignInController.setPostSignInUrl("/after-redirect-controller/social-get-token");
+//
+//        return providerSignInController;
 //    }
-
-    @Bean
-    public ProviderSignInController providerSignInController() {
-        usersConnectionRepository
-                .setConnectionSignUp(socialConnectionSignup);
-
-        ProviderSignInController providerSignInController = new ProviderSignInController(
-                connectionFactoryLocator,
-                usersConnectionRepository,
-                new SocialSignInAdapter(configuration, userDetailsService));
-
-//        providerSignInController.setPostSignInUrl("/after-redirect-controller/social-get-token");
-
-        return providerSignInController;
-    }
 }
