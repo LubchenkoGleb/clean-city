@@ -22,7 +22,10 @@ public class RootConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SimpleWebSocketHandler(), "/echo").withSockJS();
+        registry
+                .addHandler(new SimpleWebSocketHandler(), "/echo")
+                .setAllowedOrigins("*")
+                .withSockJS();
     }
 
     private final Environment environment;
