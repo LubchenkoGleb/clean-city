@@ -3,9 +3,6 @@ package com.kpi.diploma.smartroads.config;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.kpi.diploma.smartroads.config.db.UserCascadeSaveEL;
-import com.kpi.diploma.smartroads.socket.MapObjectUnsecuredSocketHandler;
-import com.kpi.diploma.smartroads.socket.SecuredSimpleWebSocketHandler;
-import com.kpi.diploma.smartroads.socket.SimpleWebSocketHandler;
 import com.sendgrid.SendGrid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +13,6 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @Slf4j
 @Configuration
