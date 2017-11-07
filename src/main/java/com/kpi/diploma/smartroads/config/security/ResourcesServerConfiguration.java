@@ -39,12 +39,7 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                         "/is-alive-rest/test",
                         "/driver-requests/confirm",
                         "/manager-requests/confirm",
-                        "/echo-all.html",
-                        "/echo-all/**",
-                        "/echo-my.html"
-//                        ,
-//                        "/echo-my/info"
-                        )
+                        "/socket/map-object/all/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

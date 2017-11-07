@@ -144,23 +144,24 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private void testMapObjects(User owner) {
+        mapObjectRepository.deleteAll();
         for (int i = 0; i < 10; i++) {
             MapObject mapObject = new MapObject();
             mapObject.setOwner(owner);
-            mapObject.setLat((Math.random() * 0.5) + 30);
-            mapObject.setLon((Math.random() * 0.5) + 50);
+            mapObject.setLon((Math.random() * 5) + 30);
+            mapObject.setLat((Math.random() * 5) + 50);
 
             MapObjectDetail mapObjectDetailGlass = new MapObjectDetail();
             mapObjectDetailGlass.setType(MapObjectValues.GLASS);
             mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
 
             MapObjectDetail mapObjectDetailPlastic = new MapObjectDetail();
-            mapObjectDetailGlass.setType(MapObjectValues.PLASTIC);
-            mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
+            mapObjectDetailPlastic.setType(MapObjectValues.PLASTIC);
+            mapObjectDetailPlastic.setAmount(((Double)(Math.random() * 5)).intValue());
 
             MapObjectDetail mapObjectDetailPaper = new MapObjectDetail();
-            mapObjectDetailGlass.setType(MapObjectValues.PAPER);
-            mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
+            mapObjectDetailPaper.setType(MapObjectValues.PAPER);
+            mapObjectDetailPaper.setAmount(((Double)(Math.random() * 5)).intValue());
 
             mapObject.getDetails()
                     .addAll(Arrays.asList(mapObjectDetailGlass, mapObjectDetailPlastic, mapObjectDetailPaper));

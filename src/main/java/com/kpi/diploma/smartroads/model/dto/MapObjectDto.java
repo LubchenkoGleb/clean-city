@@ -1,10 +1,12 @@
 package com.kpi.diploma.smartroads.model.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kpi.diploma.smartroads.model.document.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
+import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,5 +43,18 @@ public class MapObjectDto {
         log.info("'mapObjectDto={}'", mapObjectDto);
 
         return mapObject;
+    }
+
+    public static String convert(List<MapObject> mapObjects) {
+        log.info("'convert' invoked with params'{}'", mapObjects);
+
+        try {
+            String mapObjectsJsonString = mapper.writeValueAsString(mapObjects);
+            return mapObjectsJsonString;
+        } catch (JsonProcessingException e) {
+            log.error("incorrect input json exception. Message='{}'", e.getMessage());
+            e.printStackTrace();
+            throw  new IncorrectInputDataException("incorrect input json exception");
+        }
     }
 }
