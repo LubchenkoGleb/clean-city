@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableResourceServer
@@ -20,6 +21,7 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
     public void configure(HttpSecurity http) throws Exception {
 
         http
+                .cors().and()
                 .csrf()
                 .disable()
                 .authorizeRequests()
@@ -37,13 +39,19 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                         "/is-alive-rest/test",
                         "/driver-requests/confirm",
                         "/manager-requests/confirm",
-                        "/echo.html",
-                        "/echo/**")
+                        "/echo-all.html",
+                        "/echo-all/**",
+                        "/echo-my.html"
+//                        ,
+//                        "/echo-my/info"
+                        )
                 .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and();
     }
+
+
 
 //    @Bean
 //    public ProviderSignInController providerSignInController() {

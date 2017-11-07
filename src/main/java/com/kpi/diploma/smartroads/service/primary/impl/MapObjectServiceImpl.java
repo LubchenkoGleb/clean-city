@@ -1,7 +1,6 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.MapObject;
-import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.dto.MapObjectDto;
@@ -41,9 +40,9 @@ public class MapObjectServiceImpl implements MapObjectService {
 
         User user = userRepository.findOne(userId);
         User owner = null;
-        if(user.hasRole(RoleValues.COMPANY)) {
+        if (user.hasRole(RoleValues.COMPANY)) {
             owner = user;
-        } else if(user.hasRole(RoleValues.MANAGER)) {
+        } else if (user.hasRole(RoleValues.MANAGER)) {
             Manager manager = managerRepository.findOne(userId);
             owner = manager.getBoss();
         }
@@ -68,6 +67,7 @@ public class MapObjectServiceImpl implements MapObjectService {
 
     @Override
     public List<MapObjectDto> getByOwner(String userId) {
+        log.info("'getByOwner' invoked with params'{}'", userId);
         return null;
     }
 

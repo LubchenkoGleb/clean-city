@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,4 +23,8 @@ public class MapObject {
     private User owner;
 
     private List<MapObjectDetail> details;
+
+    public MapObject() {
+        details = new ArrayList<>();
+    }
 }

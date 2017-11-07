@@ -1,9 +1,13 @@
 package com.kpi.diploma.smartroads;
 
+import com.kpi.diploma.smartroads.model.document.MapObject;
 import com.kpi.diploma.smartroads.model.document.Role;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
+import com.kpi.diploma.smartroads.model.document.user.User;
+import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -26,6 +31,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     private final CompanyRepository companyRepository;
     private final DriverRepository driverRepository;
     private final ManagerRepository managerRepository;
+    private final MapObjectRepository mapObjectRepository;
 
     @Autowired
     public SmartRoadsApplication(UserRepository userRepository,
@@ -33,13 +39,15 @@ public class SmartRoadsApplication implements CommandLineRunner {
                                  RoleRepository roleRepository,
                                  CompanyRepository companyRepository,
                                  DriverRepository driverRepository,
-                                 ManagerRepository managerRepository) {
+                                 ManagerRepository managerRepository,
+                                 MapObjectRepository mapObjectRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.companyRepository = companyRepository;
         this.driverRepository = driverRepository;
         this.managerRepository = managerRepository;
+        this.mapObjectRepository = mapObjectRepository;
     }
 
     public static void main(String[] args) {
@@ -79,6 +87,8 @@ public class SmartRoadsApplication implements CommandLineRunner {
         company.getDrivers().addAll(testDrivers());
         company.getManagers().addAll(testManagers());
         companyRepository.save(company);
+
+        testMapObjects(company);
     }
 
     private List<Driver> testDrivers() {
@@ -131,5 +141,30 @@ public class SmartRoadsApplication implements CommandLineRunner {
         manager.setEmail("test1");
         manager.setInviteKey("key1");
         managerRepository.save(manager);
+    }
+
+    private void testMapObjects(User owner) {
+        for (int i = 0; i < 10; i++) {
+            MapObject mapObject = new MapObject();
+            mapObject.setOwner(owner);
+            mapObject.setLat((Math.random() * 0.5) + 30);
+            mapObject.setLon((Math.random() * 0.5) + 50);
+
+            MapObjectDetail mapObjectDetailGlass = new MapObjectDetail();
+            mapObjectDetailGlass.setType(MapObjectValues.GLASS);
+            mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
+
+            MapObjectDetail mapObjectDetailPlastic = new MapObjectDetail();
+            mapObjectDetailGlass.setType(MapObjectValues.PLASTIC);
+            mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
+
+            MapObjectDetail mapObjectDetailPaper = new MapObjectDetail();
+            mapObjectDetailGlass.setType(MapObjectValues.PAPER);
+            mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
+
+            mapObject.getDetails()
+                    .addAll(Arrays.asList(mapObjectDetailGlass, mapObjectDetailPlastic, mapObjectDetailPaper));
+            mapObjectRepository.save(mapObject);
+        }
     }
 }

@@ -3,6 +3,9 @@ package com.kpi.diploma.smartroads.config;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.kpi.diploma.smartroads.config.db.UserCascadeSaveEL;
+import com.kpi.diploma.smartroads.socket.MapObjectUnsecuredSocketHandler;
+import com.kpi.diploma.smartroads.socket.SecuredSimpleWebSocketHandler;
+import com.kpi.diploma.smartroads.socket.SimpleWebSocketHandler;
 import com.sendgrid.SendGrid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -18,21 +23,18 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @Configuration
 @EnableMongoAuditing
 @EnableWebSocket
-public class RootConfig implements WebSocketConfigurer {
-
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry
-                .addHandler(new SimpleWebSocketHandler(), "/echo")
-                .setAllowedOrigins("*")
-                .withSockJS();
-    }
+public class RootConfig extends WebMvcConfigurerAdapter {
 
     private final Environment environment;
 
     @Autowired
     public RootConfig(Environment environment) {
         this.environment = environment;
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
     }
 
     @Bean
