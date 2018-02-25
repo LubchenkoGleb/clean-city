@@ -9,6 +9,7 @@ import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.util.data.EmailMessage;
+import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.CompanyRepository;
 import com.kpi.diploma.smartroads.repository.DriverRepository;
@@ -23,6 +24,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,8 +63,15 @@ public class CompanyServiceImpl implements CompanyService {
             String companyId, RegistrationDriverDto driver) {
         log.info("'createDriver' invoked with params'{}, {}'", companyId, driver);
 
+        String encodedEmail;
+        try {
+            encodedEmail = URLEncoder.encode(driver.getEmail(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IncorrectInputDataException("impossible to encode email");
+        }
+
         String inviteKey = RandomStringUtils.randomAlphabetic(50);
-        String message = clientUrl + "?email=" + driver.getEmail() + "&key=" + inviteKey + "&role=DRIVER";
+        String message = clientUrl + "?email=" + encodedEmail + "&key=" + inviteKey + "&role=DRIVER";
         EmailMessage emailMessage = new EmailMessage(driver.getEmail(), "Confirm driver account",
                 message);
         emailService.send(emailMessage);
@@ -89,11 +99,18 @@ public class CompanyServiceImpl implements CompanyService {
             String companyId, RegistrationManagerDto manager) {
         log.info("'createManager' invoked with params'{}, {}'", companyId, manager);
 
+        String encodedEmail;
+        try {
+            encodedEmail = URLEncoder.encode(manager.getEmail(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IncorrectInputDataException("impossible to encode email");
+        }
+
         String inviteKey = RandomStringUtils.randomAlphabetic(50);
-        String message = clientUrl + "?email=" + manager.getEmail() + "&key=" + inviteKey + "&role=MANAGER";
+        String message = clientUrl + "?email=" + encodedEmail + "&key=" + inviteKey + "&role=MANAGER";
         EmailMessage emailMessage = new EmailMessage(manager.getEmail(), "Confirm manager account", message);
         emailService.send(emailMessage);
-        log.info("email is sent");
+        log.info("email was sent");
 
         Role managerRole = roleRepository.findByRole(RoleValues.MANAGER);
         Company company = companyRepository.findOne(companyId);

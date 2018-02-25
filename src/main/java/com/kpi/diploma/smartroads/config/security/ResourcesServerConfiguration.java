@@ -28,7 +28,9 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                         "/map-object-requests/set-company").hasRole("ADMIN")
                 .antMatchers(
                         "/company-requests/create-driver",
-                        "/company-requests/create-manager").hasRole("COMPANY")
+                        "/company-requests/create-manager",
+                        "/company-requests/get-drivers",
+                        "/company-requests/get-managers").hasRole("COMPANY")
                 .antMatchers(
                         "/",
                         "/registration/**",

@@ -4,6 +4,7 @@ import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
+import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,10 @@ public class CompanyController {
             @AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'createDriver' invoked with params'{}, {}'", driverDto, principal);
 
+        if (driverDto.getEmail() == null) {
+            throw new IncorrectInputDataException("email isn't set");
+        }
+
         RegistrationDriverDto driver = companyService.createDriver(principal.getUserId(), driverDto);
         log.info("'driver={}'", driver);
 
@@ -43,6 +48,10 @@ public class CompanyController {
             @RequestBody RegistrationManagerDto managerDto,
             @AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'createManager' invoked with params'{}, {}'", managerDto, principal);
+
+        if (managerDto.getEmail() == null) {
+            throw new IncorrectInputDataException("email isn't set");
+        }
 
         RegistrationManagerDto manager = companyService.createManager(principal.getUserId(), managerDto);
         log.info("'driver={}'", manager);
