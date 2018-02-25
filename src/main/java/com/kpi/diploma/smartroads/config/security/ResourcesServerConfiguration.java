@@ -24,7 +24,8 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/map-object-requests/create").hasRole("ADMIN")
+                .antMatchers("/map-object-requests/create",
+                        "/map-object-requests/set-company").hasRole("ADMIN")
                 .antMatchers(
                         "/company-requests/create-driver",
                         "/company-requests/create-manager").hasRole("COMPANY")

@@ -15,49 +15,65 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class AdviceController {
 
-    @ExceptionHandler(IncorrectInputDataException.class)
-    public ResponseEntity<ErrorMessage> handleIncorrectInputDataException(
-            HttpServletRequest request, IncorrectInputDataException ex) {
-        log.error("'handleIncorrectInputDataException' invoked for imageUrl'{}'", request.getRequestURL());
-        log.error("'exceptionMessage={}'", ex.getErrorMessage());
-        return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(IncorrectInputDataException.class)
+//    public ResponseEntity<ErrorMessage> handleIncorrectInputDataException(
+//            HttpServletRequest request, IncorrectInputDataException ex) {
+//        log.error("'handleIncorrectInputDataException' invoked for imageUrl'{}'", request.getRequestURL());
+//        log.error("'exceptionMessage={}'", ex.getErrorMessage());
+//        return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ExceptionHandler(IncorrectInviteKey.class)
+//    public ResponseEntity<ErrorMessage> handleIncorrectInviteUrl(
+//            HttpServletRequest request, IncorrectInviteKey ex) {
+//        log.error("'handleIncorrectInviteUrl' invoked for imageUrl'{}'", request.getRequestURL());
+//        log.error("'exceptionMessage={}'", ex.getErrorMessage());
+//        return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ExceptionHandler(EmailException.class)
+//    public ResponseEntity<ErrorMessage> handleEmailException(
+//            HttpServletRequest request, EmailException ex) {
+//        log.error("'handleEmailException' invoked for imageUrl'{}'", request.getRequestURL());
+//        log.error("'exceptionMessage={}'", ex.getMessage());
+//        ex.printStackTrace();
+//        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), ex.getClass().getCanonicalName());
+//        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+//    }
 
-    @ExceptionHandler(IncorrectInviteKey.class)
-    public ResponseEntity<ErrorMessage> handleIncorrectInviteUrl(
-            HttpServletRequest request, IncorrectInviteKey ex) {
-        log.error("'handleIncorrectInviteUrl' invoked for imageUrl'{}'", request.getRequestURL());
-        log.error("'exceptionMessage={}'", ex.getErrorMessage());
-        return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
-    }
+    @ExceptionHandler(BaseRuntimeException.class)
+    public ResponseEntity<ErrorMessage> handleBaseRuntimeExceptions(BaseRuntimeException ex) {
+        log.error("'handleBaseRuntimeExceptions' invoked with params'{}'", ex.getErrorMessage().getMessage());
 
-    @ExceptionHandler(EmailException.class)
-    public ResponseEntity<ErrorMessage> handleEmailException(
-            HttpServletRequest request, EmailException ex) {
-        log.error("'handleEmailException' invoked for imageUrl'{}'", request.getRequestURL());
-        log.error("'exceptionMessage={}'", ex.getMessage());
-        ex.printStackTrace();
-        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), ex.getClass().getCanonicalName());
+        StringBuilder stringBuilder = new StringBuilder();
+        for (StackTraceElement stackTraceElement : ex.getStackTrace()) {
+            stringBuilder.append(stackTraceElement.toString());
+        }
+        log.error(stringBuilder.toString());
+
+        ErrorMessage errorMessage = ex.getErrorMessage();
+        errorMessage.setExceptionName(ex.getClass().getSimpleName());
+        log.error("'errorMessage={}'", errorMessage);
+
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ImageServiceException.class)
-    public ResponseEntity<ErrorMessage> handleImageServiceExceptions(
-            HttpServletRequest request, ImageServiceException ex) {
-        log.error("'handleImageServiceExceptions' invoked for imageUrl'{}'", request.getRequestURL());
-        log.error("'exceptionMessage={}'", ex.getMessage());
-        ex.printStackTrace();
-        return new ResponseEntity<>(ex.getErrorMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @Order
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOtherExceptions(
             HttpServletRequest request, Exception ex) {
-        log.error("'handleOtherExceptions' invoked for imageUrl'{}'", request.getRequestURL());
-        log.error("'exceptionMessage={}'", ex.getMessage());
-        ex.printStackTrace();
-        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), ex.getClass().getSimpleName());
+        log.error("'handleOtherExceptions' invoked for request'{}'", request.getRequestURL());
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (StackTraceElement stackTraceElement : ex.getStackTrace()) {
+            stringBuilder.append(stackTraceElement.toString());
+        }
+        log.error(stringBuilder.toString());
+
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage());
+        errorMessage.setExceptionName(ex.getClass().getSimpleName());
+        log.error("'errorMessage={}'", errorMessage);
+
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

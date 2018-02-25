@@ -1,5 +1,6 @@
-package com.kpi.diploma.smartroads.model.dto;
+package com.kpi.diploma.smartroads.model.dto.user;
 
+import com.kpi.diploma.smartroads.service.util.ConversionService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +15,7 @@ public class DriverDto extends UserDto {
     public static DriverDto convert(Object object) {
         log.info("'convert' invoked with params'{}'", object);
 
-        DriverDto driverDto = mapper.convertValue(object, DriverDto.class);
+        DriverDto driverDto = ConversionService.convertToObject(object, DriverDto.class);
         log.info("'driverDto={}'", driverDto);
 
         return driverDto;

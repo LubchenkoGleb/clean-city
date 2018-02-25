@@ -8,6 +8,10 @@ public interface MapObjectService {
 
     MapObjectDto createMapObject(String userId, MapObjectDto mapObjectDto);
 
+    MapObjectDto setCompany(String ownerId, String mapObjectId);
+
+    MapObjectDto unsetCompany(String mapObjectId);
+
     MapObjectDto deleteMapObject(String userId, String mapObjectId);
 
     List<MapObjectDto> getByOwner(String userId);

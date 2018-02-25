@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.user.User;
-import com.kpi.diploma.smartroads.model.dto.UserDto;
+import com.kpi.diploma.smartroads.model.dto.user.UserDto;
 import com.kpi.diploma.smartroads.model.util.exception.ImageServiceException;
 import com.kpi.diploma.smartroads.repository.UserRepository;
 import com.kpi.diploma.smartroads.service.primary.UserService;

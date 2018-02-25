@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document(collection = "user")
 @ToString(exclude = {"boss"})
-@EqualsAndHashCode(exclude = {"boss"})
+@EqualsAndHashCode(exclude = {"boss"}, callSuper = true)
 public class Manager extends User {
 
     private String inviteKey;

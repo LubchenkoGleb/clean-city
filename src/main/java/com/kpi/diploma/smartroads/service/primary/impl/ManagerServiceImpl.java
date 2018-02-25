@@ -1,8 +1,8 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.user.Manager;
-import com.kpi.diploma.smartroads.model.dto.ManagerDto;
-import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
+import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
+import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInviteKey;
 import com.kpi.diploma.smartroads.repository.ManagerRepository;
 import com.kpi.diploma.smartroads.service.primary.ManagerService;

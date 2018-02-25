@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model.dto;
+package com.kpi.diploma.smartroads.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kpi.diploma.smartroads.service.util.validation.PasswordMatches;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @PasswordMatches
-public class RegistrationDriverDto {
+public class RegistrationManagerDto {
 
     private String email;
 

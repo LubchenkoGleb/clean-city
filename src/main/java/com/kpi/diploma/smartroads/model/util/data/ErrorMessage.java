@@ -8,8 +8,7 @@ public class ErrorMessage {
     private String message;
     private String exceptionName;
 
-    public ErrorMessage(String message, String exceptionName) {
+    public ErrorMessage(String message) {
         this.message = message;
-        this.exceptionName = exceptionName;
     }
 }

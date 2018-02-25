@@ -56,13 +56,17 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
+        roleRepository.deleteAll();
+        mapObjectRepository.deleteAll();
+        userRepository.deleteAll();
+
         initRoles();
         initUsers();
+
         log.info("test data was init");
     }
 
     private void initRoles() {
-        roleRepository.deleteAll();
         Role roleCompany = new Role(RoleValues.COMPANY);
         Role roleDriver = new Role(RoleValues.DRIVER);
         Role roleManager = new Role(RoleValues.MANAGER);
@@ -74,8 +78,6 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private void initUsers() {
-        userRepository.deleteAll();
-
         initAdmin();
         initCompanies();
         driverForConfirmation();
@@ -86,6 +88,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         Role adminRole = roleRepository.findByRole(RoleValues.ADMIN);
 
         User admin = new User();
+        admin.setId("a1");
         admin.setEmail("admin");
         admin.setPassword(passwordEncoder.encode("admin"));
         admin.setEnable(true);
@@ -97,18 +100,20 @@ public class SmartRoadsApplication implements CommandLineRunner {
     private void initCompanies() {
         Role companyRole = roleRepository.findByRole(RoleValues.COMPANY);
 
-        Company company = new Company();
-        company.setEmail("company1");
-        company.setFirstName("cp1");
-        company.setLastName("cp1");
-        company.setPassword(passwordEncoder.encode("1234"));
-        company.setEnable(true);
-        company.getRoles().add(companyRole);
-        company.getDrivers().addAll(testDrivers());
-        company.getManagers().addAll(testManagers());
-        companyRepository.save(company);
-
-        initMapObjects(company);
+        for (int i = 0; i < 2; i++) {
+            Company company = new Company();
+            company.setId("c" + i);
+            company.setEmail("company" + i);
+            company.setFirstName("cp" + i);
+            company.setLastName("cp" + i);
+            company.setPassword(passwordEncoder.encode("1234"));
+            company.setEnable(true);
+            company.getRoles().add(companyRole);
+            company.getDrivers().addAll(testDrivers());
+            company.getManagers().addAll(testManagers());
+            companyRepository.save(company);
+            initMapObjects(company);
+        }
     }
 
     private List<Driver> testDrivers() {
@@ -117,6 +122,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         ArrayList<Driver> drivers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Driver driver = new Driver();
+            driver.setId("d" + i);
             driver.setEmail("driver" + i + "@email.com");
             driver.setFirstName("driver" + i + "_firstName");
             driver.setLastName("driver" + i + "_lastName");
@@ -135,6 +141,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         ArrayList<Manager> managers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Manager manager = new Manager();
+            manager.setId("m" + i);
             manager.setEmail("manager" + i + "@email.com");
             manager.setFirstName("manager" + i + "_firstName");
             manager.setLastName("manager" + i + "_lastName");
@@ -162,9 +169,10 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     private void initMapObjects(User owner) {
-        mapObjectRepository.deleteAll();
-        for (int i = 0; i < 10; i++) {
+        List<MapObject> mapObjects = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
             MapObject mapObject = new MapObject();
+            mapObject.setId("m" + owner.getId() + i);
             mapObject.setOwner(owner);
             mapObject.setLon((Math.random() * 5) + 30);
             mapObject.setLat((Math.random() * 5) + 50);
@@ -183,7 +191,8 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
             mapObject.getDetails()
                     .addAll(Arrays.asList(mapObjectDetailGlass, mapObjectDetailPlastic, mapObjectDetailPaper));
-            mapObjectRepository.save(mapObject);
+            mapObjects.add(mapObject);
         }
+        mapObjectRepository.save(mapObjects);
     }
 }

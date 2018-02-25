@@ -1,12 +1,11 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.user.Driver;
-import com.kpi.diploma.smartroads.model.dto.DriverDto;
-import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
+import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
+import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInviteKey;
 import com.kpi.diploma.smartroads.repository.DriverRepository;
 import com.kpi.diploma.smartroads.service.primary.DriverService;
-import com.kpi.diploma.smartroads.service.util.security.MongoUserDetailsService;
 import com.kpi.diploma.smartroads.service.util.security.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

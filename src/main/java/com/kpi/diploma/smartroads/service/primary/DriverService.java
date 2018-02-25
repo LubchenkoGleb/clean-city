@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.service.primary;
 
-import com.kpi.diploma.smartroads.model.dto.DriverDto;
-import com.kpi.diploma.smartroads.model.dto.RegistrationDriverDto;
+import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
+import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 
 public interface DriverService {
     DriverDto registerDriver(RegistrationDriverDto registrationDriverDto);

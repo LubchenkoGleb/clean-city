@@ -6,6 +6,8 @@ import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.service.util.validation.PasswordMatches;
 import com.kpi.diploma.smartroads.service.util.validation.ValidateEmail;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -17,6 +19,8 @@ import java.util.Set;
 
 @Data
 @PasswordMatches
+@ToString(exclude = {"roles"})
+@EqualsAndHashCode(exclude = {"roles"})
 public class User {
 
     @Id
@@ -42,6 +46,7 @@ public class User {
 
     private String avatarUrl;
 
+    @JsonIgnore
     private Set<Role> roles;
 
     public User() {

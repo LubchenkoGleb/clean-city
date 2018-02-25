@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
-import com.kpi.diploma.smartroads.model.dto.UserDto;
+import com.kpi.diploma.smartroads.model.dto.user.UserDto;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.service.primary.UserService;
 import lombok.extern.slf4j.Slf4j;

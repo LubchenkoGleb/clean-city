@@ -10,11 +10,6 @@ spring:
     host: 127.0.0.1
     port: 6379
 
-social:
-  facebook:
-    appId: ${CLEAN_CITY_FACEBOOK_API_ID}
-    appSecret: ${CLEAN_CITY_FACEBOOK_APP_SERCRET}
-
 sendgrid:
   key: ${CLEAN_CITY_SENDGRID_KEY}
 
@@ -29,7 +24,7 @@ security:
       filter-order: 3
 
 client:
- url: https://cleancity-web.herokuapp.com/signup/
+  url: https://cleancity-web.herokuapp.com/signup/
 
 #logging:
 #  level:

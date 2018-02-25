@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
-import com.kpi.diploma.smartroads.model.dto.ManagerDto;
-import com.kpi.diploma.smartroads.model.dto.RegistrationManagerDto;
+import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
+import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.service.primary.ManagerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

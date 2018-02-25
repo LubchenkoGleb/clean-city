@@ -1,7 +1,10 @@
 package com.kpi.diploma.smartroads.model.util.exception;
 
-public class UserAlreadyExistException extends RuntimeException {
+import com.kpi.diploma.smartroads.model.util.data.ErrorMessage;
+
+public class UserAlreadyExistException extends BaseRuntimeException {
+
     public UserAlreadyExistException(String message) {
-        super(message);
+        super(new ErrorMessage(message));
     }
 }
