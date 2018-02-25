@@ -55,11 +55,9 @@ public class SmartRoadsApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... strings) throws Exception {
+    public void run(String... strings) {
         initRoles();
-        initCompanies();
-        driverForConfirmation();
-        managerForConfirmation();
+        initUsers();
         log.info("test data was init");
     }
 
@@ -68,15 +66,37 @@ public class SmartRoadsApplication implements CommandLineRunner {
         Role roleCompany = new Role(RoleValues.COMPANY);
         Role roleDriver = new Role(RoleValues.DRIVER);
         Role roleManager = new Role(RoleValues.MANAGER);
+        Role roleAdmin = new Role(RoleValues.ADMIN);
         roleRepository.save(roleCompany);
         roleRepository.save(roleDriver);
         roleRepository.save(roleManager);
+        roleRepository.save(roleAdmin);
     }
+
+    private void initUsers() {
+        userRepository.deleteAll();
+
+        initAdmin();
+        initCompanies();
+        driverForConfirmation();
+        managerForConfirmation();
+    }
+
+    private void initAdmin() {
+        Role adminRole = roleRepository.findByRole(RoleValues.ADMIN);
+
+        User admin = new User();
+        admin.setEmail("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.setEnable(true);
+        admin.getRoles().add(adminRole);
+        userRepository.save(admin);
+    }
+
 
     private void initCompanies() {
         Role companyRole = roleRepository.findByRole(RoleValues.COMPANY);
 
-        companyRepository.deleteAll();
         Company company = new Company();
         company.setEmail("company1");
         company.setFirstName("cp1");
@@ -88,7 +108,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         company.getManagers().addAll(testManagers());
         companyRepository.save(company);
 
-        testMapObjects(company);
+        initMapObjects(company);
     }
 
     private List<Driver> testDrivers() {
@@ -102,7 +122,6 @@ public class SmartRoadsApplication implements CommandLineRunner {
             driver.setLastName("driver" + i + "_lastName");
             driver.setPassword(passwordEncoder.encode("driver" + i));
             driver.setEnable(true);
-//            driver.setBoss(company);
             driver.getRoles().add(driverRole);
             driver = driverRepository.save(driver);
             drivers.add(driver);
@@ -121,7 +140,6 @@ public class SmartRoadsApplication implements CommandLineRunner {
             manager.setLastName("manager" + i + "_lastName");
             manager.setPassword(passwordEncoder.encode("manager" + i));
             manager.setEnable(true);
-//            manager.setBoss(company);
             manager.getRoles().add(managerRole);
             manager = managerRepository.save(manager);
             managers.add(manager);
@@ -143,7 +161,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         managerRepository.save(manager);
     }
 
-    private void testMapObjects(User owner) {
+    private void initMapObjects(User owner) {
         mapObjectRepository.deleteAll();
         for (int i = 0; i < 10; i++) {
             MapObject mapObject = new MapObject();
@@ -153,15 +171,15 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
             MapObjectDetail mapObjectDetailGlass = new MapObjectDetail();
             mapObjectDetailGlass.setType(MapObjectValues.GLASS);
-            mapObjectDetailGlass.setAmount(((Double)(Math.random() * 5)).intValue());
+            mapObjectDetailGlass.setAmount(((Double) (Math.random() * 5)).intValue());
 
             MapObjectDetail mapObjectDetailPlastic = new MapObjectDetail();
             mapObjectDetailPlastic.setType(MapObjectValues.PLASTIC);
-            mapObjectDetailPlastic.setAmount(((Double)(Math.random() * 5)).intValue());
+            mapObjectDetailPlastic.setAmount(((Double) (Math.random() * 5)).intValue());
 
             MapObjectDetail mapObjectDetailPaper = new MapObjectDetail();
             mapObjectDetailPaper.setType(MapObjectValues.PAPER);
-            mapObjectDetailPaper.setAmount(((Double)(Math.random() * 5)).intValue());
+            mapObjectDetailPaper.setAmount(((Double) (Math.random() * 5)).intValue());
 
             mapObject.getDetails()
                     .addAll(Arrays.asList(mapObjectDetailGlass, mapObjectDetailPlastic, mapObjectDetailPaper));

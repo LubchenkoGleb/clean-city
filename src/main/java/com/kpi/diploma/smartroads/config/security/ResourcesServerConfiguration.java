@@ -5,7 +5,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 @Configuration
 @EnableResourceServer
@@ -25,41 +24,18 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 .csrf()
                 .disable()
                 .authorizeRequests()
+                .antMatchers("/map-object-requests/create").hasRole("ADMIN")
                 .antMatchers(
                         "/company-requests/create-driver",
-                        "/company-requests/create-manager")
-                .hasRole("COMPANY")
+                        "/company-requests/create-manager").hasRole("COMPANY")
                 .antMatchers(
                         "/",
                         "/registration/**",
-                        "/connect/**",
-                        "/signin/facebook",
-                        "/after-redirect-controller/social-get-token/**",
                         "/is-alive/welcome-page",
                         "/is-alive-rest/test",
                         "/driver-requests/confirm",
                         "/manager-requests/confirm",
-                        "/socket/map-object/all/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and();
+                        "/socket/map-object/all/**").permitAll()
+                .anyRequest().authenticated();
     }
-
-
-
-//    @Bean
-//    public ProviderSignInController providerSignInController() {
-//        usersConnectionRepository
-//                .setConnectionSignUp(socialConnectionSignup);
-//
-//        ProviderSignInController providerSignInController = new ProviderSignInController(
-//                connectionFactoryLocator,
-//                usersConnectionRepository,
-//                new SocialSignInAdapter(tokenService));
-//
-////        providerSignInController.setPostSignInUrl("/after-redirect-controller/social-get-token");
-//
-//        return providerSignInController;
-//    }
 }

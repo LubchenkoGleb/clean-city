@@ -34,4 +34,6 @@ public class MapObjectController {
 
         return ResponseEntity.ok(response);
     }
+
+
 }

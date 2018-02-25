@@ -4,14 +4,14 @@ import com.kpi.diploma.smartroads.model.document.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.social.security.SocialUserDetails;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class MongoUserDetails implements SocialUserDetails {
+public class MongoUserDetails implements UserDetails {
 
     private String userId;
     private String userName;
@@ -64,7 +64,6 @@ public class MongoUserDetails implements SocialUserDetails {
         return enable;
     }
 
-    @Override
     public String getUserId() {
         return this.userId;
     }
