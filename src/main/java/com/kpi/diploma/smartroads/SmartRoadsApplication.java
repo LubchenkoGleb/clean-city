@@ -193,7 +193,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         for (int i = 0; i < 5; i++) {
 
             Container container = new Container();
-            container.setId("m" + owner.getId() + i);
+            container.setId("m" + i + "_" + owner.getId());
             container.setOwner(owner);
             container.setLon((Math.random() * 5) + 30);
             container.setLat((Math.random() * 5) + 50);

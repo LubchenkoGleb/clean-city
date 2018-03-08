@@ -8,7 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserDto {
 
+    private String id;
+
     private String email;
+
     private String avatarUrl;
 
     public static UserDto convert(Object object) {

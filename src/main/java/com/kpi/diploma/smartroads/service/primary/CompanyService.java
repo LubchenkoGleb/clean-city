@@ -22,7 +22,7 @@ public interface CompanyService {
 
     List<ManagerDto> getManagers(String companyId);
 
-    void setEndpoint(String marker, MapObjectDto mapObjectDto, String companyId);
+    MapObjectDto setEndpoint(String marker, MapObjectDto mapObjectDto, String companyId);
 
     void deleteEndpoint(String mapObjectId, String companyId);
 }

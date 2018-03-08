@@ -17,4 +17,6 @@ public interface MapObjectService {
     List<MapObjectDto> getByOwner(String userId);
 
     List<MapObjectDto> getAll();
+
+    MapObjectDto getDetails(String mapObjectId);
 }

@@ -14,6 +14,7 @@ import com.kpi.diploma.smartroads.model.util.data.EmailMessage;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
 import com.kpi.diploma.smartroads.model.util.exception.ResourseDoesntBelongToUserException;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectRequestValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.*;
@@ -197,17 +198,19 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void setEndpoint(String marker, MapObjectDto mapObjectDto, String companyId) {
+    public MapObjectDto setEndpoint(String marker, MapObjectDto mapObjectDto, String companyId) {
         log.info("'setEndpoint' invoked with params '{}, {}, {}'");
 
         Company company = companyRepository.findOne(companyId);
 
         MapObject mapObject = MapObjectDto.convert(mapObjectDto);
         mapObject.setOwner(company);
-        mapObject = mapObjectRepository.save(mapObject);
         log.info("'saved mapObject={}'", mapObject);
 
         if (marker.equals(MapObjectRequestValues.START)) {
+
+            mapObject.setDescription(MapObjectDescriptionValues.START.toString());
+            mapObject = mapObjectRepository.save(mapObject);
 
             MapObject start = company.getStart();
 
@@ -218,6 +221,9 @@ public class CompanyServiceImpl implements CompanyService {
             company.setStart(mapObject);
 
         } else {
+
+            mapObject.setDescription(MapObjectDescriptionValues.FINISH.toString());
+            mapObject = mapObjectRepository.save(mapObject);
 
             MapObject finish = company.getFinish();
 
@@ -230,6 +236,8 @@ public class CompanyServiceImpl implements CompanyService {
 
         company = companyRepository.save(company);
         log.info("saved company{}", company);
+
+        return MapObjectDto.convert(mapObject);
     }
 
     @Override

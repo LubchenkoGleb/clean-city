@@ -13,8 +13,14 @@ import java.util.List;
 @Slf4j
 public class MapObjectDto {
 
+    private String id;
+
     private Double lat;
+
     private Double lon;
+
+    private String description;
+    
     private UserDto owner;
 
     public static MapObjectDto convert(MapObject mapObject) {

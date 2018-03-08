@@ -1,8 +1,10 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
+import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.document.user.User;
+import com.kpi.diploma.smartroads.model.dto.map.ContainerDto;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.UserDto;
 import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
@@ -129,5 +131,25 @@ public class MapObjectServiceImpl implements MapObjectService {
     @Override
     public List<MapObjectDto> getAll() {
         return null;
+    }
+
+    @Override
+    public MapObjectDto getDetails(String mapObjectId) {
+        log.info("'getDetails' invoked with params'{}'", mapObjectId);
+
+        MapObject mapObject = mapObjectRepository.findOne(mapObjectId);
+
+        MapObjectDto mapObjectDto;
+
+        if(mapObject instanceof Container) {
+            mapObjectDto = ContainerDto.covertContainer((Container) mapObject);
+        } else {
+            mapObjectDto = MapObjectDto.convert(mapObject);
+        }
+
+        mapObjectDto.setOwner(UserDto.convert(mapObject.getOwner()));
+        log.info("'mapObjectDto={}'", mapObject);
+
+        return mapObjectDto;
     }
 }

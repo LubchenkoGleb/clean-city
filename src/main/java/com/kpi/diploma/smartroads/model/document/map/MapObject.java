@@ -19,6 +19,7 @@ public class MapObject {
     private Double lon;
 
     private String description;
+
     @DBRef
     @JsonIgnore
     private User owner;

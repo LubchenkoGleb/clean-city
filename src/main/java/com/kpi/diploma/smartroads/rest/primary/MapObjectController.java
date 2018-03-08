@@ -1,6 +1,8 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
+import com.kpi.diploma.smartroads.model.dto.map.ContainerDto;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.model.util.title.Fields;
@@ -67,5 +69,14 @@ public class MapObjectController {
         log.info("'mapObjectDto={}'", mapObjectDto);
 
         return ResponseEntity.ok(mapObjectDto);
+    }
+
+    @GetMapping(value = "/get-details/{mapObjectId}")
+    private ResponseEntity<MapObjectDto> getMapObjectDatails(@PathVariable String mapObjectId) {
+        log.info("'getMapObjectDatails' invoked with params'{}'", mapObjectId);
+
+        MapObjectDto details = mapObjectService.getDetails(mapObjectId);
+
+        return ResponseEntity.ok(details);
     }
 }

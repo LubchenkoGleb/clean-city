@@ -107,7 +107,7 @@ public class CompanyController {
     }
 
     @PostMapping(value = "/set-endpoint/{marker}")
-    private ResponseEntity setEndpoint(@PathVariable String marker,
+    private ResponseEntity<MapObjectDto> setEndpoint(@PathVariable String marker,
                                        @RequestBody MapObjectDto mapObjectDto,
                                        @AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'setEndpoint' invoked with params'{}, {}, {}'", marker, mapObjectDto, principal.getUserId());
@@ -120,10 +120,10 @@ public class CompanyController {
 
         }
 
-        companyService.setEndpoint(marker, mapObjectDto, principal.getUserId());
-        log.info("set successfully");
+        MapObjectDto mapObject = companyService.setEndpoint(marker, mapObjectDto, principal.getUserId());
+        log.info("'mapObject={}'", mapObject);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok(mapObject);
     }
 
     @DeleteMapping(value = "/delete-endpoint/{mapObjectId}")
