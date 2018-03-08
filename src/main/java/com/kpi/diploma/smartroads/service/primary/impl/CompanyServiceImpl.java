@@ -1,20 +1,22 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.Role;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
+import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.util.data.EmailMessage;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
+import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
+import com.kpi.diploma.smartroads.model.util.exception.ResourseDoesntBelongToUserException;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectRequestValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
-import com.kpi.diploma.smartroads.repository.CompanyRepository;
-import com.kpi.diploma.smartroads.repository.DriverRepository;
-import com.kpi.diploma.smartroads.repository.ManagerRepository;
-import com.kpi.diploma.smartroads.repository.RoleRepository;
+import com.kpi.diploma.smartroads.repository.*;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import com.kpi.diploma.smartroads.service.util.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class CompanyServiceImpl implements CompanyService {
 
+    private final MapObjectRepository mapObjectRepository;
     private final CompanyRepository companyRepository;
     private final ManagerRepository managerRepository;
     private final DriverRepository driverRepository;
@@ -43,12 +46,14 @@ public class CompanyServiceImpl implements CompanyService {
     private final String clientUrl;
 
     @Autowired
-    public CompanyServiceImpl(CompanyRepository companyRepository,
+    public CompanyServiceImpl(MapObjectRepository mapObjectRepository,
+                              CompanyRepository companyRepository,
                               ManagerRepository managerRepository,
                               DriverRepository driverRepository,
                               RoleRepository roleRepository,
                               EmailService emailService,
                               Environment environment) {
+        this.mapObjectRepository = mapObjectRepository;
         this.companyRepository = companyRepository;
         this.managerRepository = managerRepository;
         this.driverRepository = driverRepository;
@@ -130,6 +135,42 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public void deleteDriver(String driverId, String companyId) {
+        log.info("'deleteDriver' invoked with params'{}, {}'", driverId, companyId);
+
+        Driver driver = driverRepository.findByIdAndBossId(driverId, companyId);
+
+        if (driver == null) {
+
+            String errorMessage = "driver not found or doesn't belong to company";
+            log.error(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+
+        }
+
+        driverRepository.delete(driverId);
+        log.info("deleted successfully");
+    }
+
+    @Override
+    public void deleteManager(String managerId, String companyId) {
+        log.info("'deleteManager' invoked with params'{}, {}'", managerId, companyId);
+
+        Manager manager = managerRepository.findByIdAndBossId(managerId, companyId);
+
+        if (manager == null) {
+
+            String errorMessage = "manager not found or doesn't belong to company";
+            log.error(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+
+        }
+
+        managerRepository.delete(managerId);
+        log.info("deleted successfully");
+    }
+
+    @Override
     public List<DriverDto> getDrivers(String companyId) {
         log.info("'getDrivers' invoked with params'{}'", companyId);
 
@@ -153,5 +194,66 @@ public class CompanyServiceImpl implements CompanyService {
         log.info("'managers={}'", managers);
 
         return managers;
+    }
+
+    @Override
+    public void setEndpoint(String marker, MapObjectDto mapObjectDto, String companyId) {
+        log.info("'setEndpoint' invoked with params '{}, {}, {}'");
+
+        Company company = companyRepository.findOne(companyId);
+
+        MapObject mapObject = MapObjectDto.convert(mapObjectDto);
+        mapObject.setOwner(company);
+        mapObject = mapObjectRepository.save(mapObject);
+        log.info("'saved mapObject={}'", mapObject);
+
+        if (marker.equals(MapObjectRequestValues.START)) {
+
+            MapObject start = company.getStart();
+
+            if (start != null) {
+                mapObjectRepository.delete(start.getId());
+            }
+
+            company.setStart(mapObject);
+
+        } else {
+
+            MapObject finish = company.getFinish();
+
+            if (finish != null) {
+                mapObjectRepository.delete(finish.getId());
+            }
+
+            company.setFinish(mapObject);
+        }
+
+        company = companyRepository.save(company);
+        log.info("saved company{}", company);
+    }
+
+    @Override
+    public void deleteEndpoint(String mapObjectId, String companyId) {
+        log.info("'deleteEndpoint' invoked with params'{}, {}'", mapObjectId, companyId);
+
+        MapObject endpoint = mapObjectRepository.findOne(mapObjectId);
+        log.info("'endpoint={}'", endpoint);
+
+        if (endpoint == null) {
+
+            String errorMessage = "endpoint with id'" + mapObjectId + "' not found";
+            log.error(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+
+        } else if (!endpoint.getOwner().getId().equals(companyId)) {
+
+            String errorMessage = "map object doesn't belong to user";
+            log.error(errorMessage);
+            throw new ResourseDoesntBelongToUserException(errorMessage);
+
+        }
+
+        mapObjectRepository.delete(mapObjectId);
+        log.info("'deleted successfully");
     }
 }

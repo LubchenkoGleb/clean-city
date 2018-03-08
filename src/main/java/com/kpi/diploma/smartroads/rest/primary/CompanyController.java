@@ -1,18 +1,23 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
+import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectRequestValues;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -77,5 +82,58 @@ public class CompanyController {
         log.info("'managers={}'", managers);
 
         return ResponseEntity.ok(managers);
+    }
+
+    @DeleteMapping(value = "/delete-driver/{driverId}")
+    private ResponseEntity deleteDriver(@AuthenticationPrincipal MongoUserDetails principal,
+                                        @PathVariable String driverId) {
+        log.info("'deleteDriver' invoked with params'{}, {}'", principal.getUsername(), driverId);
+
+        companyService.deleteDriver(driverId, principal.getUserId());
+        log.info("deleted successfully");
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete-manager/{managerId}")
+    private ResponseEntity deleteManager(@AuthenticationPrincipal MongoUserDetails principal,
+                                        @PathVariable String managerId) {
+        log.info("'deleteManager' invoked with params'{}, {}'", principal.getUsername(), managerId);
+
+        companyService.deleteManager(managerId, principal.getUserId());
+        log.info("deleted successfully");
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/set-endpoint/{marker}")
+    private ResponseEntity setEndpoint(@PathVariable String marker,
+                                       @RequestBody MapObjectDto mapObjectDto,
+                                       @AuthenticationPrincipal MongoUserDetails principal) {
+        log.info("'setEndpoint' invoked with params'{}, {}, {}'", marker, mapObjectDto, principal.getUserId());
+
+        if(!marker.equals(MapObjectRequestValues.START) && !marker.equals(MapObjectRequestValues.FINISH)) {
+
+            String errorMessage = "Incorrect endpoint marker";
+            log.error(errorMessage);
+            throw new IncorrectInputDataException(errorMessage);
+
+        }
+
+        companyService.setEndpoint(marker, mapObjectDto, principal.getUserId());
+        log.info("set successfully");
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete-endpoint/{mapObjectId}")
+    private ResponseEntity deleteEndpoint(@AuthenticationPrincipal MongoUserDetails principal,
+                                          @PathVariable String mapObjectId) {
+        log.info("'deleteEndpoint' invoked with params'{}, {}'", principal.getUserId(), mapObjectId);
+
+        companyService.deleteEndpoint(mapObjectId, principal.getUserId());
+        log.info("deleted successfully");
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

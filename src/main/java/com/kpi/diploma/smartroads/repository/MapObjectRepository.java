@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.repository;
 
-import com.kpi.diploma.smartroads.model.document.MapObject;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

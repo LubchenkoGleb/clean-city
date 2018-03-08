@@ -1,12 +1,14 @@
 package com.kpi.diploma.smartroads;
 
-import com.kpi.diploma.smartroads.model.document.MapObject;
+import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.Role;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.*;
@@ -101,6 +103,10 @@ public class SmartRoadsApplication implements CommandLineRunner {
         Role companyRole = roleRepository.findByRole(RoleValues.COMPANY);
 
         for (int i = 0; i < 2; i++) {
+
+            List<Driver> drivers = testDrivers();
+            List<Manager> manager = testManagers();
+
             Company company = new Company();
             company.setId("c" + i);
             company.setEmail("company" + i);
@@ -109,10 +115,17 @@ public class SmartRoadsApplication implements CommandLineRunner {
             company.setPassword(passwordEncoder.encode("1234"));
             company.setEnable(true);
             company.getRoles().add(companyRole);
-            company.getDrivers().addAll(testDrivers());
-            company.getManagers().addAll(testManagers());
-            companyRepository.save(company);
-            initMapObjects(company);
+            company.getDrivers().addAll(drivers);
+            company.getManagers().addAll(manager);
+            Company savedCompany = companyRepository.save(company);
+
+            drivers.forEach(dr -> dr.setBoss(savedCompany));
+            driverRepository.save(drivers);
+
+            manager.forEach(mn -> mn.setBoss(savedCompany));
+            managerRepository.save(manager);
+
+            initContainers(company);
         }
     }
 
@@ -168,14 +181,23 @@ public class SmartRoadsApplication implements CommandLineRunner {
         managerRepository.save(manager);
     }
 
-    private void initMapObjects(User owner) {
-        List<MapObject> mapObjects = new ArrayList<>();
+    private void initContainers(User owner) {
+
+        MapObject start = new MapObject();
+        start.setLon((Math.random() * 5) + 30);
+        start.setLat((Math.random() * 5) + 50);
+        start.setOwner(owner);
+        start.setDescription(MapObjectDescriptionValues.START.toString());
+
+        List<Container> mapObjects = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            MapObject mapObject = new MapObject();
-            mapObject.setId("m" + owner.getId() + i);
-            mapObject.setOwner(owner);
-            mapObject.setLon((Math.random() * 5) + 30);
-            mapObject.setLat((Math.random() * 5) + 50);
+
+            Container container = new Container();
+            container.setId("m" + owner.getId() + i);
+            container.setOwner(owner);
+            container.setLon((Math.random() * 5) + 30);
+            container.setLat((Math.random() * 5) + 50);
+            container.setDescription(MapObjectDescriptionValues.CONTAINER.toString());
 
             MapObjectDetail mapObjectDetailGlass = new MapObjectDetail();
             mapObjectDetailGlass.setType(MapObjectValues.GLASS);
@@ -189,9 +211,9 @@ public class SmartRoadsApplication implements CommandLineRunner {
             mapObjectDetailPaper.setType(MapObjectValues.PAPER);
             mapObjectDetailPaper.setAmount(((Double) (Math.random() * 5)).intValue());
 
-            mapObject.getDetails()
+            container.getDetails()
                     .addAll(Arrays.asList(mapObjectDetailGlass, mapObjectDetailPlastic, mapObjectDetailPaper));
-            mapObjects.add(mapObject);
+            mapObjects.add(container);
         }
         mapObjectRepository.save(mapObjects);
     }

@@ -1,6 +1,6 @@
-package com.kpi.diploma.smartroads.model.dto;
+package com.kpi.diploma.smartroads.model.dto.map;
 
-import com.kpi.diploma.smartroads.model.document.MapObject;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.dto.user.UserDto;
 import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
 import com.kpi.diploma.smartroads.service.util.ConversionService;
@@ -16,7 +16,6 @@ public class MapObjectDto {
     private Double lat;
     private Double lon;
     private UserDto owner;
-    private List<MapObjectDetail> details;
 
     public static MapObjectDto convert(MapObject mapObject) {
         log.info("'convert' invoked with params'{}'", mapObject);

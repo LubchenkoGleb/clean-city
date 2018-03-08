@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.kpi.diploma.smartroads.model.dto.MapObjectDto;
+import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.model.util.title.Fields;
 import com.kpi.diploma.smartroads.service.primary.MapObjectService;

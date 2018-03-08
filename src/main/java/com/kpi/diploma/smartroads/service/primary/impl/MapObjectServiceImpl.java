@@ -1,9 +1,9 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
-import com.kpi.diploma.smartroads.model.document.MapObject;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.document.user.User;
-import com.kpi.diploma.smartroads.model.dto.MapObjectDto;
+import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.UserDto;
 import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
 import com.kpi.diploma.smartroads.model.util.exception.UserRoleException;

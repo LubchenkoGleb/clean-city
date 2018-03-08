@@ -1,5 +1,6 @@
 package com.kpi.diploma.smartroads.service.primary;
 
+import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
@@ -13,7 +14,15 @@ public interface CompanyService {
 
     RegistrationManagerDto createManager(String userName, RegistrationManagerDto manager);
 
+    void deleteDriver(String driverId, String companyId);
+
+    void deleteManager(String managerId, String companyId);
+
     List<DriverDto> getDrivers(String companyId);
 
     List<ManagerDto> getManagers(String companyId);
+
+    void setEndpoint(String marker, MapObjectDto mapObjectDto, String companyId);
+
+    void deleteEndpoint(String mapObjectId, String companyId);
 }

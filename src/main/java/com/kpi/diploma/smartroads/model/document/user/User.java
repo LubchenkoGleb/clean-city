@@ -2,7 +2,6 @@ package com.kpi.diploma.smartroads.model.document.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kpi.diploma.smartroads.model.document.Role;
-import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.service.util.validation.PasswordMatches;
 import com.kpi.diploma.smartroads.service.util.validation.ValidateEmail;
 import lombok.Data;

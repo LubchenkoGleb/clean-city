@@ -1,6 +1,7 @@
 package com.kpi.diploma.smartroads.model.document.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -12,8 +13,8 @@ import java.util.Set;
 
 @Data
 @Document(collection = "user")
-@ToString(exclude = {"managers", "drivers"})
-@EqualsAndHashCode(exclude = {"managers", "drivers"}, callSuper = true)
+@ToString(exclude = {"managers", "drivers", "start", "finish"})
+@EqualsAndHashCode(exclude = {"managers", "drivers", "start", "finish"}, callSuper = true)
 public class Company extends User {
 
     private String firstName;
@@ -27,6 +28,14 @@ public class Company extends User {
     @DBRef
     @JsonIgnore
     private Set<Driver> drivers;
+
+    @DBRef
+    @JsonIgnore
+    private MapObject start;
+
+    @DBRef
+    @JsonIgnore
+    private MapObject finish;
 
     public Company() {
         super();

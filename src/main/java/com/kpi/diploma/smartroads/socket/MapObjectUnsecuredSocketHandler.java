@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads.socket;
 
-import com.kpi.diploma.smartroads.model.document.MapObject;
-import com.kpi.diploma.smartroads.model.dto.MapObjectDto;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
+import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.util.data.MapCornerCoordinates;
 import com.kpi.diploma.smartroads.repository.MapObjectRepository;
 import lombok.extern.slf4j.Slf4j;
