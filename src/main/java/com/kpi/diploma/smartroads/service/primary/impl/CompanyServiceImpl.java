@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
-import com.kpi.diploma.smartroads.model.document.Role;
+import com.kpi.diploma.smartroads.model.document.user.Role;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;

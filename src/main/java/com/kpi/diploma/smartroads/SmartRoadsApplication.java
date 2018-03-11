@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.map.Container;
-import com.kpi.diploma.smartroads.model.document.Role;
+import com.kpi.diploma.smartroads.model.document.user.Role;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
@@ -9,7 +9,7 @@ import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
-import com.kpi.diploma.smartroads.model.util.title.value.MapObjectValues;
+import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.*;
 import lombok.extern.slf4j.Slf4j;
@@ -200,15 +200,15 @@ public class SmartRoadsApplication implements CommandLineRunner {
             container.setDescription(MapObjectDescriptionValues.CONTAINER.toString());
 
             MapObjectDetail mapObjectDetailGlass = new MapObjectDetail();
-            mapObjectDetailGlass.setType(MapObjectValues.GLASS);
+            mapObjectDetailGlass.setType(ContainerValues.GLASS);
             mapObjectDetailGlass.setAmount(((Double) (Math.random() * 5)).intValue());
 
             MapObjectDetail mapObjectDetailPlastic = new MapObjectDetail();
-            mapObjectDetailPlastic.setType(MapObjectValues.PLASTIC);
+            mapObjectDetailPlastic.setType(ContainerValues.PLASTIC);
             mapObjectDetailPlastic.setAmount(((Double) (Math.random() * 5)).intValue());
 
             MapObjectDetail mapObjectDetailPaper = new MapObjectDetail();
-            mapObjectDetailPaper.setType(MapObjectValues.PAPER);
+            mapObjectDetailPaper.setType(ContainerValues.PAPER);
             mapObjectDetailPaper.setAmount(((Double) (Math.random() * 5)).intValue());
 
             container.getDetails()

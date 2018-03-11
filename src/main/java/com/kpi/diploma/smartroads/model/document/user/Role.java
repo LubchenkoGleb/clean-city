@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model.document;
+package com.kpi.diploma.smartroads.model.document.user;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

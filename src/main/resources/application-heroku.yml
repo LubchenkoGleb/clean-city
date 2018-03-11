@@ -4,8 +4,4 @@ spring:
 
   data:
     mongodb:
-      password: ${CLEAN_CITY_HEROKU_MONGO_PASSWORD}
-      username: heroku_66krdg88
-      database: heroku_66krdg88
-      host: ds139869.mlab.com
-      port: 39869
+      uri: ${MMONGODB_URI}
