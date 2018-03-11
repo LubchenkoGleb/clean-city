@@ -5,3 +5,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
+      database: heroku_wb0cp1lr
