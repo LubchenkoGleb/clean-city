@@ -1,6 +1,6 @@
 spring:
   redis:
-    url: ${CLEAN_CITY_HEROKU_REDIS_URL}
+    url: ${REDIS_URL}
 
   data:
     mongodb:
