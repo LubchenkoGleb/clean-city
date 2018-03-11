@@ -184,8 +184,8 @@ public class SmartRoadsApplication implements CommandLineRunner {
     private void initContainers(User owner) {
 
         MapObject start = new MapObject();
-        start.setLon((Math.random() * 5) + 30);
-        start.setLat((Math.random() * 5) + 50);
+        start.setLon((Math.random() * 0.2) + 30.4);
+        start.setLat((Math.random() * 0.2) + 50.3);
         start.setOwner(owner);
         start.setDescription(MapObjectDescriptionValues.START.toString());
 
@@ -195,8 +195,8 @@ public class SmartRoadsApplication implements CommandLineRunner {
             Container container = new Container();
             container.setId("m" + i + "_" + owner.getId());
             container.setOwner(owner);
-            container.setLon((Math.random() * 5) + 30);
-            container.setLat((Math.random() * 5) + 50);
+            container.setLon((Math.random() * 0.2) + 30.4);
+            container.setLat((Math.random() * 0.2) + 50.3);
             container.setDescription(MapObjectDescriptionValues.CONTAINER.toString());
 
             MapObjectDetail mapObjectDetailGlass = new MapObjectDetail();
