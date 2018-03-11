@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Data
 @Document(collection = "user")
-@ToString(exclude = {"managers", "drivers", "start", "finish"})
+@ToString(exclude = {"managers", "drivers", "start", "finish"}, callSuper = true)
 @EqualsAndHashCode(exclude = {"managers", "drivers", "start", "finish"}, callSuper = true)
 public class Company extends User {
 

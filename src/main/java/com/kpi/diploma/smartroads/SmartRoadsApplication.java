@@ -104,8 +104,8 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
         for (int i = 0; i < 2; i++) {
 
-            List<Driver> drivers = testDrivers();
-            List<Manager> manager = testManagers();
+            List<Driver> drivers = testDrivers("c" + i);
+            List<Manager> manager = testManagers("c" + i);
 
             Company company = new Company();
             company.setId("c" + i);
@@ -129,14 +129,14 @@ public class SmartRoadsApplication implements CommandLineRunner {
         }
     }
 
-    private List<Driver> testDrivers() {
+    private List<Driver> testDrivers(String companyName) {
         Role driverRole = roleRepository.findByRole(RoleValues.DRIVER);
 
         ArrayList<Driver> drivers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Driver driver = new Driver();
-            driver.setId("d" + i);
-            driver.setEmail("driver" + i + "@email.com");
+            driver.setId("d" + i + "_" + companyName);
+            driver.setEmail("driver" + i + "_" + companyName + "@email.com");
             driver.setFirstName("driver" + i + "_firstName");
             driver.setLastName("driver" + i + "_lastName");
             driver.setPassword(passwordEncoder.encode("driver" + i));
@@ -148,14 +148,14 @@ public class SmartRoadsApplication implements CommandLineRunner {
         return drivers;
     }
 
-    private List<Manager> testManagers() {
+    private List<Manager> testManagers(String companyName) {
         Role managerRole = roleRepository.findByRole(RoleValues.MANAGER);
 
         ArrayList<Manager> managers = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
             Manager manager = new Manager();
-            manager.setId("m" + i);
-            manager.setEmail("manager" + i + "@email.com");
+            manager.setId("m" + i + "_" + companyName);
+            manager.setEmail("manager" + i + "_" + companyName + "@email.com");
             manager.setFirstName("manager" + i + "_firstName");
             manager.setLastName("manager" + i + "_lastName");
             manager.setPassword(passwordEncoder.encode("manager" + i));

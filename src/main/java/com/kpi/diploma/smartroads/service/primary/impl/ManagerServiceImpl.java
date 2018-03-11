@@ -69,10 +69,12 @@ public class ManagerServiceImpl implements ManagerService {
         log.info("'createJobRequest' invoked with params'{}, {}, {}'", managerId, mapObjectId, containerValue);
 
         Manager manager = managerRepository.findOne(managerId);
+        log.info("manager boss = " + manager.getBoss() + "");
 
         Container container = (Container) mapObjectRepository.findOne(mapObjectId);
+        log.info("container owner = " + container.getOwner() + "");
 
-        if (manager.getBoss().getId() != container.getOwner().getId()) {
+        if (!manager.getBoss().getId().equals(container.getOwner().getId())) {
 
             String errorMessage = "container doesn't belong to company where manager works";
             log.error(errorMessage);

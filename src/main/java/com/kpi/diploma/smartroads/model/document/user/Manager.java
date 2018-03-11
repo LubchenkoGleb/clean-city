@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "user")
-@ToString(exclude = {"boss"})
+@ToString(exclude = {"boss"}, callSuper = true)
 @EqualsAndHashCode(exclude = {"boss"}, callSuper = true)
 public class Manager extends User {
 
