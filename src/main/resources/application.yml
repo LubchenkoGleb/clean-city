@@ -18,13 +18,13 @@ cloudinary:
   key: ${CLEAN_CITY_CLOUDINARY_KEY}
   secret: ${CLEAN_CITY_CLOUDINARY_SECRET}
 
+client:
+  url: https://cleancity-web.herokuapp.com/signup
+
 security:
   oauth2:
     resource:
       filter-order: 3
-
-client:
-  url: https://cleancity-web.herokuapp.com/signup
 
 #logging:
 #  level:

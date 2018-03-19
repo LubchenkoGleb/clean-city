@@ -6,10 +6,7 @@ import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
-import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
-import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
-import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
-import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
+import com.kpi.diploma.smartroads.model.dto.user.*;
 import com.kpi.diploma.smartroads.model.util.data.EmailMessage;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
@@ -24,12 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -176,6 +175,7 @@ public class CompanyServiceImpl implements CompanyService {
         log.info("'getDrivers' invoked with params'{}'", companyId);
 
         Company company = companyRepository.findOne(companyId);
+
         List<DriverDto> driverDtos = company.getDrivers()
                 .stream().map(DriverDto::convert)
                 .collect(Collectors.toList());
@@ -263,5 +263,21 @@ public class CompanyServiceImpl implements CompanyService {
 
         mapObjectRepository.delete(mapObjectId);
         log.info("'deleted successfully");
+    }
+
+    @Override
+    public List<CompanyDto> getCompanies() {
+        log.info("'getCompanies' invoked");
+
+        Role role = roleRepository.findByRole(RoleValues.COMPANY);
+
+        List<Company> all = companyRepository.findAllByRolesContains(role);
+
+        List<CompanyDto> driverDtos = all
+                .stream().map(CompanyDto::convert)
+                .collect(Collectors.toList());
+        log.info("'driverDtos={}'", driverDtos);
+
+        return driverDtos;
     }
 }

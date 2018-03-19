@@ -2,13 +2,13 @@ package com.kpi.diploma.smartroads.service.primary.impl;
 
 import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
-import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.document.user.User;
 import com.kpi.diploma.smartroads.model.dto.map.ContainerDto;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.UserDto;
 import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
 import com.kpi.diploma.smartroads.model.util.exception.UserRoleException;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.ManagerRepository;
 import com.kpi.diploma.smartroads.repository.MapObjectRepository;
@@ -40,25 +40,30 @@ public class MapObjectServiceImpl implements MapObjectService {
     }
 
     @Override
-    public MapObjectDto createMapObject(String userId, MapObjectDto mapObjectDto) {
-        log.info("'createMapObject' invoked with params'{}, {}'", userId, mapObjectDto);
+    public MapObjectDto createMapObject(String companyId, ContainerDto containerDto) {
+        log.info("'createMapObject' invoked with params'{}, {}'", companyId, containerDto);
 
-        User user = userRepository.findOne(userId);
-        User owner = null;
-        if (user.hasRole(RoleValues.COMPANY)) {
-            owner = user;
-        } else if (user.hasRole(RoleValues.MANAGER)) {
-            Manager manager = managerRepository.findOne(userId);
-            owner = manager.getBoss();
-        }
+        User owner = userRepository.findOne(companyId);
         log.info("'owner={}'", owner);
 
-        MapObject mapObject = MapObjectDto.convert(mapObjectDto);
-        mapObject.setOwner(owner);
-        mapObject = mapObjectRepository.save(mapObject);
-        log.info("'mapObject={}'", mapObject);
+        if(!owner.hasRole(RoleValues.COMPANY)) {
 
-        return mapObjectDto;
+            String errorMessage = "user with id '" + companyId + "' doesn't have company role";
+            log.error(errorMessage);
+            throw new UserRoleException(errorMessage);
+
+        }
+
+        Container container = ContainerDto.convertContainer(containerDto);
+        container.setOwner(owner);
+        container.setDescription(MapObjectDescriptionValues.CONTAINER.toString());
+        container = mapObjectRepository.save(container);
+
+        containerDto = ContainerDto.convertContainer(container);
+        containerDto.setOwner(UserDto.convert(container.getOwner()));
+        log.info("response 'containerDto={}'", containerDto);
+
+        return containerDto;
     }
 
     @Override
@@ -142,7 +147,7 @@ public class MapObjectServiceImpl implements MapObjectService {
         MapObjectDto mapObjectDto;
 
         if(mapObject instanceof Container) {
-            mapObjectDto = ContainerDto.covertContainer((Container) mapObject);
+            mapObjectDto = ContainerDto.convertContainer((Container) mapObject);
         } else {
             mapObjectDto = MapObjectDto.convert(mapObject);
         }

@@ -17,9 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"managers", "drivers", "start", "finish"}, callSuper = true)
 public class Company extends User {
 
-    private String firstName;
-
-    private String lastName;
+    private String title;
 
     @DBRef
     @JsonIgnore

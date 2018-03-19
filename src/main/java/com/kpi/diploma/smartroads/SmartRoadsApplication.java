@@ -110,8 +110,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
             Company company = new Company();
             company.setId("c" + i);
             company.setEmail("company" + i);
-            company.setFirstName("cp" + i);
-            company.setLastName("cp" + i);
+            company.setTitle("cp" + i);
             company.setPassword(passwordEncoder.encode("1234"));
             company.setEnable(true);
             company.getRoles().add(companyRole);

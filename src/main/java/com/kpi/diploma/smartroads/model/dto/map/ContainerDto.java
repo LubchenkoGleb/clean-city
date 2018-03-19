@@ -14,12 +14,21 @@ public class ContainerDto extends MapObjectDto {
 
     private List<MapObjectDetail> details;
 
-    public static ContainerDto covertContainer(Container container) {
+    public static ContainerDto convertContainer(Container container) {
         log.info("'convert' invoked with params'{}'", container);
 
         ContainerDto containerDto = ConversionService.convertToObject(container, ContainerDto.class);
         log.info("'containerDto={}'", containerDto);
 
         return containerDto;
+    }
+
+    public static Container convertContainer(ContainerDto containerDto) {
+        log.info("'convert' invoked with params'{}'", containerDto);
+
+        Container container = ConversionService.convertToObject(containerDto, Container.class);
+        log.info("'container={}'", container);
+
+        return container;
     }
 }

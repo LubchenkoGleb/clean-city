@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 public class DriverDto extends UserDto {
 
     String firstName;
+
     String lastName;
+
     String accessToken;
 
     public static DriverDto convert(Object object) {

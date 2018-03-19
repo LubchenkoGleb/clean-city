@@ -25,12 +25,11 @@ public class MapObjectController {
         this.mapObjectService = mapObjectService;
     }
 
-    @PostMapping(value = "/create")
-    private ResponseEntity<MapObjectDto> create(@AuthenticationPrincipal MongoUserDetails principal,
-                                                @RequestBody MapObjectDto mapObjectDto) {
-        log.info("'create' invoked with params'{}, {}'", principal.getUserId(), mapObjectDto);
+    @PostMapping(value = "/create-container/{companyId}")
+    private ResponseEntity<MapObjectDto> createContainer(@RequestBody ContainerDto containerDto, @PathVariable String companyId) {
+        log.info("'create' invoked with params'{}'", containerDto);
 
-        MapObjectDto response = mapObjectService.createMapObject(principal.getUserId(), mapObjectDto);
+        MapObjectDto response = mapObjectService.createMapObject(companyId, containerDto);
         log.info("'response={}'", response);
 
         return ResponseEntity.ok(response);

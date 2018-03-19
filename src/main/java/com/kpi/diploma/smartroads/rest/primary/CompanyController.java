@@ -1,11 +1,7 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
-import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
-import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
-import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
-import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
-import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
+import com.kpi.diploma.smartroads.model.dto.user.*;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectRequestValues;
@@ -17,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @Slf4j
@@ -97,7 +92,7 @@ public class CompanyController {
 
     @DeleteMapping(value = "/delete-manager/{managerId}")
     private ResponseEntity deleteManager(@AuthenticationPrincipal MongoUserDetails principal,
-                                        @PathVariable String managerId) {
+                                         @PathVariable String managerId) {
         log.info("'deleteManager' invoked with params'{}, {}'", principal.getUsername(), managerId);
 
         companyService.deleteManager(managerId, principal.getUserId());
@@ -108,11 +103,11 @@ public class CompanyController {
 
     @PostMapping(value = "/set-endpoint/{marker}")
     private ResponseEntity<MapObjectDto> setEndpoint(@PathVariable String marker,
-                                       @RequestBody MapObjectDto mapObjectDto,
-                                       @AuthenticationPrincipal MongoUserDetails principal) {
+                                                     @RequestBody MapObjectDto mapObjectDto,
+                                                     @AuthenticationPrincipal MongoUserDetails principal) {
         log.info("'setEndpoint' invoked with params'{}, {}, {}'", marker, mapObjectDto, principal.getUserId());
 
-        if(!marker.equals(MapObjectRequestValues.START) && !marker.equals(MapObjectRequestValues.FINISH)) {
+        if (!marker.equals(MapObjectRequestValues.START) && !marker.equals(MapObjectRequestValues.FINISH)) {
 
             String errorMessage = "Incorrect endpoint marker";
             log.error(errorMessage);
@@ -135,5 +130,14 @@ public class CompanyController {
         log.info("deleted successfully");
 
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get-list")
+    private ResponseEntity<List<CompanyDto>> getList() {
+        log.info("'getList' invoked");
+
+        List<CompanyDto> companies = companyService.getCompanies();
+
+        return ResponseEntity.ok(companies);
     }
 }

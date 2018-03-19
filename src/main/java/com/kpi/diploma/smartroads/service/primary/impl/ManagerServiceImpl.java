@@ -5,6 +5,7 @@ import com.kpi.diploma.smartroads.model.document.user.Manager;
 import com.kpi.diploma.smartroads.model.dto.user.ManagerDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationManagerDto;
 import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
+import com.kpi.diploma.smartroads.model.util.exception.IncorrectInputDataException;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInviteKey;
 import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException;
 import com.kpi.diploma.smartroads.model.util.exception.ResourseDoesntBelongToUserException;
@@ -91,6 +92,12 @@ public class ManagerServiceImpl implements ManagerService {
             String errorMessage = "incorrect container type for this map object";
             log.error(errorMessage);
             throw new ResourceNotFoundException(errorMessage);
+
+        } else if(optional.get().isFull()) {
+
+            String errorMessage = "request for this object accepted already";
+            log.error(errorMessage);
+            throw new IncorrectInputDataException(errorMessage);
 
         }
 

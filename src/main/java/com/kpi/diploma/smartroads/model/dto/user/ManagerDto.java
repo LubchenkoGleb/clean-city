@@ -9,7 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ManagerDto extends UserDto {
 
     String firstName;
+
     String lastName;
+
     String accessToken;
 
     public static ManagerDto convert(Object object) {
