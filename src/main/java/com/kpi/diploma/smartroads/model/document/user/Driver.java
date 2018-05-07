@@ -19,7 +19,7 @@ public class Driver extends User {
 
     private String lastName;
 
-    @DBRef
+    @DBRef(lazy = true)
     @JsonIgnore
     private User boss;
 }

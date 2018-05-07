@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface MapObjectRepository extends MongoRepository<MapObject, String> {
 
+    List<MapObject> findAllByOwnerId(String ownerId);
+
     List<MapObject> findByLatBetweenAndLonBetween(Double latMin, Double labMax, Double lonMin, Double lonMax);
 
 //    List<MapObject> findByLatBetweenAndLonBetweenAAndOwnerId(Double latMin, Double labMax, Double lonMin, Double lonMax);

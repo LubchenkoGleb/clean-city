@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "map-object-requests")
@@ -26,7 +28,7 @@ public class MapObjectController {
     }
 
     @PostMapping(value = "/create-container/{companyId}")
-    private ResponseEntity<MapObjectDto> createContainer(@RequestBody ContainerDto containerDto, @PathVariable String companyId) {
+    private ResponseEntity<MapObjectDto> createContainer(@Valid @RequestBody ContainerDto containerDto, @PathVariable String companyId) {
         log.info("'create' invoked with params'{}'", containerDto);
 
         MapObjectDto response = mapObjectService.createMapObject(companyId, containerDto);

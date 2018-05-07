@@ -16,19 +16,18 @@ import com.kpi.diploma.smartroads.model.util.title.value.MapObjectRequestValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.*;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
+import com.kpi.diploma.smartroads.service.primary.MapObjectService;
 import com.kpi.diploma.smartroads.service.util.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -39,6 +38,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final MapObjectRepository mapObjectRepository;
     private final CompanyRepository companyRepository;
     private final ManagerRepository managerRepository;
+    private final MapObjectService mapObjectService;
     private final DriverRepository driverRepository;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
@@ -49,6 +49,7 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyServiceImpl(MapObjectRepository mapObjectRepository,
                               CompanyRepository companyRepository,
                               ManagerRepository managerRepository,
+                              MapObjectService mapObjectService,
                               DriverRepository driverRepository,
                               RoleRepository roleRepository,
                               EmailService emailService,
@@ -56,6 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
         this.mapObjectRepository = mapObjectRepository;
         this.companyRepository = companyRepository;
         this.managerRepository = managerRepository;
+        this.mapObjectService = mapObjectService;
         this.driverRepository = driverRepository;
         this.roleRepository = roleRepository;
         this.emailService = emailService;
@@ -215,6 +217,7 @@ public class CompanyServiceImpl implements CompanyService {
             MapObject start = company.getStart();
 
             if (start != null) {
+                log.info("delete old start={}", start);
                 mapObjectRepository.delete(start.getId());
             }
 
@@ -226,6 +229,7 @@ public class CompanyServiceImpl implements CompanyService {
             mapObject = mapObjectRepository.save(mapObject);
 
             MapObject finish = company.getFinish();
+            log.info("'old finish={}'", finish);
 
             if (finish != null) {
                 mapObjectRepository.delete(finish.getId());
@@ -236,6 +240,8 @@ public class CompanyServiceImpl implements CompanyService {
 
         company = companyRepository.save(company);
         log.info("saved company{}", company);
+
+        mapObjectService.processRoutes(companyId, mapObject);
 
         return MapObjectDto.convert(mapObject);
     }

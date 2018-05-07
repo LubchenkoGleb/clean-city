@@ -7,6 +7,7 @@ import com.kpi.diploma.smartroads.service.util.ConversionService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -15,12 +16,14 @@ public class MapObjectDto {
 
     private String id;
 
+    @NotNull
     private Double lat;
 
+    @NotNull
     private Double lon;
 
     private String description;
-    
+
     private UserDto owner;
 
     public static MapObjectDto convert(MapObject mapObject) {

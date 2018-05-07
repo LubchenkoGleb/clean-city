@@ -43,6 +43,7 @@ public class AdviceController {
 
     @ExceptionHandler(BaseRuntimeException.class)
     public ResponseEntity<ErrorMessage> handleBaseRuntimeExceptions(BaseRuntimeException ex) {
+        ex.printStackTrace();
         log.error("'handleBaseRuntimeExceptions' invoked with params'{}'", ex.getErrorMessage().getMessage());
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -62,6 +63,7 @@ public class AdviceController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOtherExceptions(
             HttpServletRequest request, Exception ex) {
+        ex.printStackTrace();
         log.error("'handleOtherExceptions' invoked for request'{}'", request.getRequestURL());
 
         StringBuilder stringBuilder = new StringBuilder();

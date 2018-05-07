@@ -19,19 +19,19 @@ public class Company extends User {
 
     private String title;
 
-    @DBRef
+    @DBRef(lazy = true)
     @JsonIgnore
     private Set<Manager> managers;
 
-    @DBRef
+    @DBRef(lazy = true)
     @JsonIgnore
     private Set<Driver> drivers;
 
-    @DBRef
+    @DBRef(lazy = true)
     @JsonIgnore
     private MapObject start;
 
-    @DBRef
+    @DBRef(lazy = true)
     @JsonIgnore
     private MapObject finish;
 

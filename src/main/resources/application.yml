@@ -26,6 +26,9 @@ security:
     resource:
       filter-order: 3
 
+google:
+  apiKey: AIzaSyAe2b0y52Ft-GElgJQR1Xo7FMIEfOpS6SI
+
 #logging:
 #  level:
 #    org:

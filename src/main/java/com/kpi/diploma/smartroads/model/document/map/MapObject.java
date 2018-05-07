@@ -7,8 +7,11 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
-@ToString(exclude = "owner")
+@ToString(exclude = {"owner", "startRoutes"})
 public class MapObject {
 
     @Id
@@ -20,7 +23,20 @@ public class MapObject {
 
     private String description;
 
-    @DBRef
+    @DBRef(lazy = true)
     @JsonIgnore
     private User owner;
+
+    @DBRef(lazy = true)
+    @JsonIgnore
+    private List<Route> startRoutes;
+
+    public MapObject() {
+        this.startRoutes = new ArrayList<>();
+    }
+
+    public MapObject(String id) {
+        this();
+        this.id = id;
+    }
 }

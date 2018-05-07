@@ -30,6 +30,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final RouteRepository routeRepository;
     private final CompanyRepository companyRepository;
     private final DriverRepository driverRepository;
     private final ManagerRepository managerRepository;
@@ -39,6 +40,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     public SmartRoadsApplication(UserRepository userRepository,
                                  PasswordEncoder passwordEncoder,
                                  RoleRepository roleRepository,
+                                 RouteRepository routeRepository,
                                  CompanyRepository companyRepository,
                                  DriverRepository driverRepository,
                                  ManagerRepository managerRepository,
@@ -46,6 +48,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.routeRepository = routeRepository;
         this.companyRepository = companyRepository;
         this.driverRepository = driverRepository;
         this.managerRepository = managerRepository;
@@ -58,14 +61,15 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        roleRepository.deleteAll();
-        mapObjectRepository.deleteAll();
-        userRepository.deleteAll();
-
-        initRoles();
-        initUsers();
-
-        log.info("test data was init");
+//        roleRepository.deleteAll();
+//        mapObjectRepository.deleteAll();
+//        userRepository.deleteAll();
+//        routeRepository.deleteAll();
+//
+//        initRoles();
+//        initUsers();
+//
+//        log.info("test data was init");
     }
 
     private void initRoles() {
@@ -102,7 +106,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
     private void initCompanies() {
         Role companyRole = roleRepository.findByRole(RoleValues.COMPANY);
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
 
             List<Driver> drivers = testDrivers("c" + i);
             List<Manager> manager = testManagers("c" + i);
@@ -124,7 +128,9 @@ public class SmartRoadsApplication implements CommandLineRunner {
             manager.forEach(mn -> mn.setBoss(savedCompany));
             managerRepository.save(manager);
 
-            initContainers(company);
+            if(i != 2) {
+                initContainers(company);
+            }
         }
     }
 
