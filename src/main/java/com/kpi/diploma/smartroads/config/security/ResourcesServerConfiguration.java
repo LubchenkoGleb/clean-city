@@ -24,13 +24,9 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/map-object-requests/create",
-                        "/map-object-requests/set-company").hasRole("ADMIN")
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers(
-                        "/company-requests/create-driver",
-                        "/company-requests/create-manager",
-                        "/company-requests/get-drivers",
-                        "/company-requests/get-managers").hasRole("COMPANY")
+                        "/company-requests/**").hasRole("COMPANY")
                 .antMatchers(
                         "/",
                         "/registration/**",
@@ -38,7 +34,8 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                         "/is-alive-rest/test",
                         "/driver-requests/confirm",
                         "/manager-requests/confirm",
-                        "/socket/map-object/all/**").permitAll()
+                        "/socket/map-object/all/**",
+                        "/map-object-requests/get-details/**").permitAll()
                 .anyRequest().authenticated();
     }
 }

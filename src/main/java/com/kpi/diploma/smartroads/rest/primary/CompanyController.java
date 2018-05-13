@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping(value = "/company-requests")
 public class CompanyController {
 
-    final CompanyService companyService;
+    private final CompanyService companyService;
 
     @Autowired
     public CompanyController(CompanyService companyService) {
@@ -132,12 +132,4 @@ public class CompanyController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get-list")
-    private ResponseEntity<List<CompanyDto>> getList() {
-        log.info("'getList' invoked");
-
-        List<CompanyDto> companies = companyService.getCompanies();
-
-        return ResponseEntity.ok(companies);
-    }
 }
