@@ -40,6 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final ManagerRepository managerRepository;
     private final MapObjectService mapObjectService;
     private final DriverRepository driverRepository;
+    private final RouteRepository routeRepository;
     private final RoleRepository roleRepository;
     private final EmailService emailService;
     private final Environment environment;
@@ -51,6 +52,7 @@ public class CompanyServiceImpl implements CompanyService {
                               ManagerRepository managerRepository,
                               MapObjectService mapObjectService,
                               DriverRepository driverRepository,
+                              RouteRepository routeRepository,
                               RoleRepository roleRepository,
                               EmailService emailService,
                               Environment environment) {
@@ -59,6 +61,7 @@ public class CompanyServiceImpl implements CompanyService {
         this.managerRepository = managerRepository;
         this.mapObjectService = mapObjectService;
         this.driverRepository = driverRepository;
+        this.routeRepository = routeRepository;
         this.roleRepository = roleRepository;
         this.emailService = emailService;
         this.environment = environment;
@@ -211,30 +214,30 @@ public class CompanyServiceImpl implements CompanyService {
 
         if (marker.equals(MapObjectRequestValues.START)) {
 
-            mapObject.setDescription(MapObjectDescriptionValues.START.toString());
-            mapObject = mapObjectRepository.save(mapObject);
-
             MapObject start = company.getStart();
 
             if (start != null) {
                 log.info("delete old start={}", start);
+                routeRepository.deleteAllByStartIdOrFinishId(start.getId(), start.getId());
                 mapObjectRepository.delete(start.getId());
             }
 
+            mapObject.setDescription(MapObjectDescriptionValues.START.toString());
+            mapObject = mapObjectRepository.save(mapObject);
             company.setStart(mapObject);
 
         } else {
-
-            mapObject.setDescription(MapObjectDescriptionValues.FINISH.toString());
-            mapObject = mapObjectRepository.save(mapObject);
 
             MapObject finish = company.getFinish();
             log.info("'old finish={}'", finish);
 
             if (finish != null) {
                 mapObjectRepository.delete(finish.getId());
+                routeRepository.deleteAllByStartIdOrFinishId(finish.getId(), finish.getId());
             }
 
+            mapObject.setDescription(MapObjectDescriptionValues.FINISH.toString());
+            mapObject = mapObjectRepository.save(mapObject);
             company.setFinish(mapObject);
         }
 

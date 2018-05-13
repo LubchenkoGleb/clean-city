@@ -1,8 +1,8 @@
 package com.kpi.diploma.smartroads;
 
 
-import com.kpi.diploma.smartroads.model.dto.task.KMeansRow;
-import com.kpi.diploma.smartroads.service.primary.TaskService;
+import com.kpi.diploma.smartroads.model.document.map.MapObject;
+import com.kpi.diploma.smartroads.model.util.data.kmeans.KMeansRow;
 import com.kpi.diploma.smartroads.service.primary.impl.TaskServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -102,6 +102,18 @@ public class TaskServiceTest {
     }
 
     @Test
+    public void test_buildMatrixForShortestPath() {
+
+//        List<MapObject> allMapObjects = new ArrayList<>();
+//        for (int i = 0; i < 4; i++) {
+//            new MapObject()
+//        }
+
+
+//        taskService.buildMatrixForShortestPath();
+    }
+
+    @Test
     public void testClustersAmount() {
         Assert.assertEquals(3, testCalculations(10, 4));
         Assert.assertEquals(1, testCalculations(1, 4));
@@ -143,4 +155,6 @@ public class TaskServiceTest {
 
         return ((Double) ceil).intValue();
     }
+
+
 }

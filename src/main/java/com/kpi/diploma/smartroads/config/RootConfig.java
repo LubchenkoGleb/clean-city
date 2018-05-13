@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
@@ -25,11 +24,6 @@ public class RootConfig extends WebMvcConfigurerAdapter {
     @Autowired
     public RootConfig(Environment environment) {
         this.environment = environment;
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
     }
 
     @Bean
@@ -50,4 +44,10 @@ public class RootConfig extends WebMvcConfigurerAdapter {
     public SendGrid getSendGrid() {
         return new SendGrid(environment.getProperty("sendgrid.key"));
     }
+
+
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**");
+//    }
 }

@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.model.dto.task;
+package com.kpi.diploma.smartroads.model.util.data.kmeans;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -10,4 +10,6 @@ public interface RouteRepository extends MongoRepository<Route, String> {
     List<Route> findAllByStartId(String startId);
 
     List<Route> findAllByLengthLessThan(Long value);
+
+    void deleteAllByStartIdOrFinishId(String startId, String finishId);
 }

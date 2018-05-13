@@ -29,11 +29,11 @@ security:
 google:
   apiKey: AIzaSyAe2b0y52Ft-GElgJQR1Xo7FMIEfOpS6SI
 
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        web: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
 
 #  devtools:
 #    remote:

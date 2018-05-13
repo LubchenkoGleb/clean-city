@@ -2,10 +2,7 @@ package com.kpi.diploma.smartroads.service.util.google;
 
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
-import com.google.maps.model.DirectionsLeg;
-import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.DirectionsRoute;
-import com.google.maps.model.LatLng;
+import com.google.maps.model.*;
 import com.kpi.diploma.smartroads.model.util.data.GoogleRoute;
 import com.kpi.diploma.smartroads.model.util.exception.GoogleBouldRouteException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +18,7 @@ public class GoogleService {
 
     public GoogleRoute buildRoute(LatLng origin, LatLng destination) {
         GeoApiContext context = new GeoApiContext.Builder().apiKey(googleApiKey).build();
+        log.info("origin={}, destination={}", origin, destination);
 
         try {
 
@@ -30,6 +28,7 @@ public class GoogleService {
                     .await();
 
             DirectionsRoute route = result.routes[0];
+            log.info("route={}, {}", route, route.overviewPolyline.decodePath());
 
             Long distance = 0L;
             for (DirectionsLeg leg : route.legs) {

@@ -3,9 +3,9 @@ package com.kpi.diploma.smartroads.service.primary.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
-import com.kpi.diploma.smartroads.model.document.map.Route;
-import com.kpi.diploma.smartroads.model.dto.task.KMEansRequest;
-import com.kpi.diploma.smartroads.model.dto.task.KMeansRow;
+import com.kpi.diploma.smartroads.model.util.data.kmeans.KMEansRequest;
+import com.kpi.diploma.smartroads.model.util.data.kmeans.KMeansRow;
+import com.kpi.diploma.smartroads.model.util.data.shortest.path.ShortestPathRow;
 import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.repository.ContainerRepository;
@@ -85,19 +85,29 @@ public class TaskServiceImpl implements TaskService {
             List<List<String>> clusters = getClusters(kMeansRows);
 
             clusters = normalizeKMeans(GURBAGE_TRUCK_CAPACITY, clusters, kMeansRows);
-            log.info("after clusters={}", clusters);
+            log.debug("after clusters={}", clusters);
 
             Map<String, Integer> duplications = calculateDuplications(clusters);
-            log.info("'duplications={}'", duplications);
+            log.debug("'duplications={}'", duplications);
 
             List<Set<String>> clustersWithoutDuplications = deleteDuplicatesFromCluster(clusters);
             log.info("'clustersWithoutDuplications={}'", clustersWithoutDuplications);
 
-            
 
         });
 
-        return ConversionService.convertToJsonNode(requestsByType);
+        List<Set<String>> clusters = new ArrayList<>(Arrays.asList(
+                new HashSet<>(Arrays.asList("5af83e8158c3597d98ca1cf3", "5af83e8c58c3597d98ca1cf6")),
+                new HashSet<>(Arrays.asList("5af83e9558c3597d98ca1cfb", "5af83e8c58c3597d98ca1cf6")),
+                new HashSet<>(Arrays.asList("5af83e7e58c3597d98ca1cf2", "5af83e8c58c3597d98ca1cf6"))));
+
+        List<ShortestPathRow> shortestPathMatrix = buildMatrixForShortestPath(new ArrayList<>(clusters.get(0)), allByOwnerId);
+
+        List<List<String>> paths = getShortestPath(new ArrayList<>(Collections.singletonList(shortestPathMatrix)));
+
+        return ConversionService.convertToJsonNode(paths);
+
+//        return null;
     }
 
     private Map<String, List<String>> createRequestByType(Collection<Container> allByOwnerId) {
@@ -130,14 +140,21 @@ public class TaskServiceImpl implements TaskService {
         return clusters;
     }
 
-    private List<Long> getDistanceToOtherObjects(Container mapObject, List<String> otherIds) {
-//        log.info("'getDistanceToOtherObjects' invoked with params'{}, {}'", mapObject, otherIds);
+    private List<List<String>> getShortestPath(List<List<ShortestPathRow>> shortestPathRequest) {
+
+        JsonNode response = httpMethods.sendPostRequest(
+                "https://us-central1-cleancity-web-1506581318975.cloudfunctions.net/shortestPath", shortestPathRequest);
+
+        List<List<String>> path = new ArrayList<>();
+        return ConversionService.convertToObject(response, path.getClass());
+    }
+
+    private List<Long> getDistanceToOtherObjects(MapObject mapObject, List<String> otherIds) {
+        log.debug("'getDistanceToOtherObjects' invoked with params'{}, {}'", mapObject, otherIds);
 
         ArrayList<Long> response = new ArrayList<>(Collections.nCopies(otherIds.size(), 0L));
-        List<Route> byStartId = mapObject.getStartRoutes();
-//        log.info("'byStartId={}'", byStartId);
 
-        byStartId.forEach(route -> {
+        mapObject.getStartRoutes().forEach(route -> {
 
             String id = route.getFinish().getId();
 
@@ -151,12 +168,13 @@ public class TaskServiceImpl implements TaskService {
             }
 
         });
-//        log.info("'response={}'", response);
+        log.debug("'response={}'", response);
 
         return response;
     }
 
     public List<List<String>> normalizeKMeans(Integer clusterSize, List<List<String>> clustersByIds, List<KMeansRow> kMeansRows) {
+        log.info("'normalizeKMeans' params'{}, {}, {}", clusterSize, clustersByIds, kMeansRows);
 
         List<Integer> cannotBeMovedIndexes = new ArrayList<>();
 
@@ -235,7 +253,7 @@ public class TaskServiceImpl implements TaskService {
 
     private void moveElementToAnotherCluster(List<Integer> currentCluster, Integer elementIndex,
                                              Integer nearestNeighborIndex, List<List<Integer>> clustersByIndexes) {
-//        log.info("'moveElementToAnotherCluster' params '{}, {}, {}, {}", currentCluster, elementIndex, nearestNeighborIndex, clustersByIndexes);
+        log.info("'moveElementToAnotherCluster' params '{}, {}, {}, {}", currentCluster, elementIndex, nearestNeighborIndex, clustersByIndexes);
 
         currentCluster.remove(elementIndex);
 
@@ -290,5 +308,73 @@ public class TaskServiceImpl implements TaskService {
             }
         }));
         return calculatedMap;
+    }
+
+    public List<ShortestPathRow> buildMatrixForShortestPath(List<String> ids, List<MapObject> mapObjects) {
+        log.info("'buildMatrixForShortestPath' params'{}, {}'", ids, mapObjects);
+
+        MapObject start = mapObjects.stream()
+                .filter(mo -> mo.getDescription().equals(MapObjectDescriptionValues.START.toString())).findAny().get();
+
+        MapObject finish = mapObjects.stream()
+                .filter(mo -> mo.getDescription().equals(MapObjectDescriptionValues.FINISH.toString())).findAny().get();
+
+        List<MapObject> mapObjectFromCluster = mapObjects.stream()
+                .filter(mo -> ids.contains(mo.getId())).collect(Collectors.toList());
+
+        List<ShortestPathRow> shortestPathRows = new ArrayList<>();
+
+        mapObjectFromCluster.forEach(mo -> {
+
+            List<String> idsWithOutCurrent = getIdsWithOutCurrent(ids, mo.getId());
+            idsWithOutCurrent.addAll(Arrays.asList(start.getId(), finish.getId()));
+            List<Long> distances = getDistanceToOtherObjects(mo, idsWithOutCurrent);
+            distances.add(ids.indexOf(mo.getId()), 0L);
+
+            ShortestPathRow shortestPathRow = new ShortestPathRow(mo.getId());
+            shortestPathRow.getValue().addAll(distances);
+            shortestPathRows.add(shortestPathRow);
+        });
+
+        ShortestPathRow startRow = new ShortestPathRow(start.getId());
+        ArrayList<String> idsForStart = new ArrayList<>(ids);
+        idsForStart.add(finish.getId());
+        List<Long> startDistances = getDistanceToOtherObjects(start, idsForStart);
+        startDistances.add(startDistances.size() - 1, 0L);
+        startRow.setValue(startDistances);
+        startRow.setStart(true);
+        shortestPathRows.add(startRow);
+
+        ShortestPathRow finishRow = new ShortestPathRow(finish.getId());
+        ArrayList<String> idsForFinish = new ArrayList<>(ids);
+        idsForFinish.add(start.getId());
+        List<Long> finishDistances = getDistanceToOtherObjects(finish, idsForFinish);
+        finishDistances.add(0L);
+        finishRow.setValue(finishDistances);
+        finishRow.setFinish(true);
+        shortestPathRows.add(finishRow);
+
+//        ArrayList<Long> distanceToStart = new ArrayList<>();
+//        ArrayList<Long> distanceToFinish = new ArrayList<>();
+//        ArrayList<ShortestPathRow> shortestPathRows = new ArrayList<>();
+//
+//        mapObjectFromCluster.forEach(mo -> {
+//
+//            ShortestPathRow shortestPathRow = new ShortestPathRow(mo.getId());
+//
+//            mo.getStartRoutes().forEach(route -> {
+//
+//                if (route.getFinish().getDescription().equals(MapObjectDescriptionValues.CONTAINER.toString())) {
+//                    shortestPathRow.getValue().add(route.getLength());
+//                } else if (route.getFinish().getDescription().equals(MapObjectDescriptionValues.START.toString())) {
+//                    distanceToStart.add(route.getLength());
+//                } else if (route.getFinish().getDescription().equals(MapObjectDescriptionValues.FINISH.toString())) {
+//                    distanceToFinish.add(route.getLength());
+//                }
+//            });
+//
+//            shortestPathRows.add(shortestPathRow);
+//        });
+        return shortestPathRows;
     }
 }

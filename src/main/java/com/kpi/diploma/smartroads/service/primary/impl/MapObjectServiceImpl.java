@@ -97,9 +97,8 @@ public class MapObjectServiceImpl implements MapObjectService {
         ExecutorService executor = Executors.newWorkStealingPool();
 
         allCompanyMapObjects.forEach(mo -> executor.submit(() -> {
-
             GoogleRoute googleRoute = googleService.buildRoute(
-                    new LatLng(mo.getLat(), mo.getLon()),
+                    new LatLng(mapObject.getLat(), mapObject.getLon()),
                     new LatLng(mo.getLat(), mo.getLon()));
             Route startRoute = new Route(mapObject, mo, googleRoute.getLength(), googleRoute.getEncodedRoute());
             log.info("'startRoute={}'", startRoute);
@@ -107,7 +106,7 @@ public class MapObjectServiceImpl implements MapObjectService {
 
             googleRoute = googleService.buildRoute(
                     new LatLng(mo.getLat(), mo.getLon()),
-                    new LatLng(mo.getLat(), mo.getLon()));
+                    new LatLng(mapObject.getLat(), mapObject.getLon()));
             Route endRoute = new Route(mo, mapObject, googleRoute.getLength(), googleRoute.getEncodedRoute());
             log.info("'endRoute={}'", endRoute);
             endRoutes.add(endRoute);
@@ -127,7 +126,8 @@ public class MapObjectServiceImpl implements MapObjectService {
         mapObjectRepository.save(mapObject);
 
         for (int i = 0; i < allCompanyMapObjects.size(); i++) {
-            allCompanyMapObjects.get(i).getStartRoutes().add(savedEndRoutes.get(i));
+            allCompanyMapObjects.get(i).getStartRoutes()
+                    .add(savedEndRoutes.get(i));
         }
         mapObjectRepository.save(allCompanyMapObjects);
 
