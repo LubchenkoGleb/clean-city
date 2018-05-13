@@ -13,10 +13,10 @@ import com.kpi.diploma.smartroads.model.util.exception.ResourceNotFoundException
 import com.kpi.diploma.smartroads.model.util.exception.UserRoleException;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
-import com.kpi.diploma.smartroads.repository.ContainerRepository;
-import com.kpi.diploma.smartroads.repository.MapObjectRepository;
-import com.kpi.diploma.smartroads.repository.RouteRepository;
-import com.kpi.diploma.smartroads.repository.UserRepository;
+import com.kpi.diploma.smartroads.repository.map.ContainerRepository;
+import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
+import com.kpi.diploma.smartroads.repository.map.RouteRepository;
+import com.kpi.diploma.smartroads.repository.user.UserRepository;
 import com.kpi.diploma.smartroads.service.primary.MapObjectService;
 import com.kpi.diploma.smartroads.service.util.google.GoogleService;
 import lombok.extern.slf4j.Slf4j;

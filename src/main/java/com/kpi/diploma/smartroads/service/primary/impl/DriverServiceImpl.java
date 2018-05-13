@@ -4,7 +4,7 @@ import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.dto.user.DriverDto;
 import com.kpi.diploma.smartroads.model.dto.user.RegistrationDriverDto;
 import com.kpi.diploma.smartroads.model.util.exception.IncorrectInviteKey;
-import com.kpi.diploma.smartroads.repository.DriverRepository;
+import com.kpi.diploma.smartroads.repository.user.DriverRepository;
 import com.kpi.diploma.smartroads.service.primary.DriverService;
 import com.kpi.diploma.smartroads.service.util.security.TokenService;
 import lombok.extern.slf4j.Slf4j;

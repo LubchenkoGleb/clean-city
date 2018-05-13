@@ -1,6 +1,5 @@
 package com.kpi.diploma.smartroads.service.primary;
 
-import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.dto.map.ContainerDto;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;

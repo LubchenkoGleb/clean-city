@@ -1,7 +1,7 @@
 //package com.kpi.diploma.smartroads.config.db;
 //
 //import com.kpi.diploma.smartroads.model.document.map.MapObject;
-//import com.kpi.diploma.smartroads.repository.MapObjectRepository;
+//import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 //import com.mongodb.DBObject;
 //import org.mockito.verification.After;
 //import org.springframework.beans.factory.annotation.Autowired;

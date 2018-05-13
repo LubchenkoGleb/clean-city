@@ -3,14 +3,15 @@ package com.kpi.diploma.smartroads.service.primary.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
+import com.kpi.diploma.smartroads.model.document.map.Task;
+import com.kpi.diploma.smartroads.model.document.map.TaskPoint;
 import com.kpi.diploma.smartroads.model.util.data.kmeans.KMEansRequest;
 import com.kpi.diploma.smartroads.model.util.data.kmeans.KMeansRow;
 import com.kpi.diploma.smartroads.model.util.data.shortest.path.ShortestPathRow;
 import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
-import com.kpi.diploma.smartroads.repository.ContainerRepository;
-import com.kpi.diploma.smartroads.repository.MapObjectRepository;
-import com.kpi.diploma.smartroads.repository.RouteRepository;
+import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
+import com.kpi.diploma.smartroads.repository.map.RouteRepository;
 import com.kpi.diploma.smartroads.service.primary.TaskService;
 import com.kpi.diploma.smartroads.service.util.ConversionService;
 import com.kpi.diploma.smartroads.service.util.http.HttpMethods;
@@ -26,9 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    private final int GURBAGE_TRUCK_CAPACITY = 4;
-
-    private final ContainerRepository containerRepository;
+    private final int GARBAGE_TRUCK_CAPACITY = 4;
 
     private final HttpMethods httpMethods;
 
@@ -36,8 +35,9 @@ public class TaskServiceImpl implements TaskService {
 
     private final MapObjectRepository mapObjectRepository;
 
-    public TaskServiceImpl(ContainerRepository containerRepository, HttpMethods httpMethods, RouteRepository routeRepository, MapObjectRepository mapObjectRepository) {
-        this.containerRepository = containerRepository;
+    public TaskServiceImpl(HttpMethods httpMethods,
+                           RouteRepository routeRepository,
+                           MapObjectRepository mapObjectRepository) {
         this.httpMethods = httpMethods;
         this.routeRepository = routeRepository;
         this.mapObjectRepository = mapObjectRepository;
@@ -62,73 +62,56 @@ public class TaskServiceImpl implements TaskService {
 
         Map<String, List<String>> requestsByType = createRequestByType(idContainerMap.values());
 
+        List<Task> response = new ArrayList<>();
+
         requestsByType.forEach((type, ids) -> {
 
-            // TODO: 10/05/18 optimize for same ids
-            List<KMeansRow> kMeansRows = new ArrayList<>();
-            ids.forEach(id -> {
-
-                List<String> idsWithoutCurrent = getIdsWithOutCurrent(ids, id);
-
-                List<Long> distanceToOtherObjects = getDistanceToOtherObjects(idContainerMap.get(id), idsWithoutCurrent);
-
-                int firstIndex = ids.indexOf(id);
-                int lastIndex = ids.lastIndexOf(id);
-
-                distanceToOtherObjects.addAll(firstIndex, Collections.nCopies(lastIndex - firstIndex + 1, 0L));
-
-                KMeansRow row = new KMeansRow(id + "/" + UUID.randomUUID(), distanceToOtherObjects);
-                kMeansRows.add(row);
-            });
-            log.info("kMeansRows={}", ConversionService.convertToJsonNode(kMeansRows));
+            List<KMeansRow> kMeansRows = createKMeansMatrix(ids, idContainerMap);
+//            log.info("kMeansRows={}", ConversionService.convertToJsonNode(kMeansRows));
 
             List<List<String>> clusters = getClusters(kMeansRows);
-
-            clusters = normalizeKMeans(GURBAGE_TRUCK_CAPACITY, clusters, kMeansRows);
-            log.debug("after clusters={}", clusters);
-
+            clusters = normalizeKMeans(GARBAGE_TRUCK_CAPACITY, clusters, kMeansRows);
+//            log.debug("after clusters={}", clusters);
             Map<String, Integer> duplications = calculateDuplications(clusters);
-            log.debug("'duplications={}'", duplications);
+//            log.debug("'duplications={}'", duplications);
+            List<List<String>> clustersWithoutDuplications = deleteDuplicatesFromCluster(clusters);
+//            log.info("'clustersWithoutDuplications={}'", clustersWithoutDuplications);
 
-            List<Set<String>> clustersWithoutDuplications = deleteDuplicatesFromCluster(clusters);
-            log.info("'clustersWithoutDuplications={}'", clustersWithoutDuplications);
+            List<List<ShortestPathRow>> clustersForShortestPath = new ArrayList<>();
+            clustersWithoutDuplications.forEach(cluster ->
+                    clustersForShortestPath.add(buildMatrixForShortestPath(cluster, allByOwnerId)));
+            List<List<String>> shortestPaths = getShortestPath(clustersForShortestPath);
 
-
+            shortestPaths.forEach(cluster -> response.add(createTask(cluster, serviceId, duplications, type)));
         });
 
-        List<Set<String>> clusters = new ArrayList<>(Arrays.asList(
-                new HashSet<>(Arrays.asList("5af83e8158c3597d98ca1cf3", "5af83e8c58c3597d98ca1cf6")),
-                new HashSet<>(Arrays.asList("5af83e9558c3597d98ca1cfb", "5af83e8c58c3597d98ca1cf6")),
-                new HashSet<>(Arrays.asList("5af83e7e58c3597d98ca1cf2", "5af83e8c58c3597d98ca1cf6"))));
+        return ConversionService.convertToJsonNode(response);
 
-        List<ShortestPathRow> shortestPathMatrix = buildMatrixForShortestPath(new ArrayList<>(clusters.get(0)), allByOwnerId);
-
-        List<List<String>> paths = getShortestPath(new ArrayList<>(Collections.singletonList(shortestPathMatrix)));
-
-        return ConversionService.convertToJsonNode(paths);
-
-//        return null;
     }
 
-    private Map<String, List<String>> createRequestByType(Collection<Container> allByOwnerId) {
-        Map<String, List<String>> requestsByType = new HashMap<>();
-        for (ContainerValues containerValues : ContainerValues.values()) {
-            requestsByType.put(containerValues.toString(), new ArrayList<>());
-        }
+    private List<KMeansRow> createKMeansMatrix(List<String> ids, Map<String, Container> idContainerMap ) {
+        // TODO: 10/05/18 optimize for same ids
+        List<KMeansRow> kMeansRows = new ArrayList<>();
+        ids.forEach(id -> {
 
-        allByOwnerId.forEach(container ->
-                container.getDetails().forEach(dt -> {
-                    if (dt.isFull()) {
-                        requestsByType.get(dt.getType().toString()).addAll(Collections.nCopies(dt.getAmount(), container.getId()));
-                    }
-                }));
+            List<String> idsWithoutCurrent = getIdsWithOutCurrent(ids, id);
 
-        return requestsByType;
+            List<Long> distanceToOtherObjects = getDistanceToOtherObjects(idContainerMap.get(id), idsWithoutCurrent);
+
+            int firstIndex = ids.indexOf(id);
+            int lastIndex = ids.lastIndexOf(id);
+
+            distanceToOtherObjects.addAll(firstIndex, Collections.nCopies(lastIndex - firstIndex + 1, 0L));
+
+            KMeansRow row = new KMeansRow(id + "/" + UUID.randomUUID(), distanceToOtherObjects);
+            kMeansRows.add(row);
+        });
+        return kMeansRows;
     }
 
     private List<List<String>> getClusters(List<KMeansRow> kMeansRows) {
 
-        int clustersAmount = (int) Math.ceil(kMeansRows.size() / (double) GURBAGE_TRUCK_CAPACITY);
+        int clustersAmount = (int) Math.ceil(kMeansRows.size() / (double) GARBAGE_TRUCK_CAPACITY);
 
         KMEansRequest kmEansRequest = new KMEansRequest(clustersAmount, kMeansRows);
         JsonNode response = httpMethods.sendPostRequest(
@@ -174,13 +157,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public List<List<String>> normalizeKMeans(Integer clusterSize, List<List<String>> clustersByIds, List<KMeansRow> kMeansRows) {
-        log.info("'normalizeKMeans' params'{}, {}, {}", clusterSize, clustersByIds, kMeansRows);
+//        log.info("'normalizeKMeans' params'{}, {}, {}", clusterSize, clustersByIds, kMeansRows);
 
         List<Integer> cannotBeMovedIndexes = new ArrayList<>();
 
         List<List<Integer>> clustersByIndexes = createIndexBasedClusters(clustersByIds, createIdIndexMap(kMeansRows));
         clustersByIndexes.sort(Comparator.comparingInt((ToIntFunction<List>) List::size).reversed());
-        log.info("'clustersByIndexes={}'", clustersByIndexes);
+//        log.info("'clustersByIndexes={}'", clustersByIndexes);
 
         while (clustersByIndexes.get(0).size() > clusterSize) {
 
@@ -226,92 +209,8 @@ public class TaskServiceImpl implements TaskService {
         return createIdsBasedClusters(clustersByIndexes, createIndexIdMap(kMeansRows));
     }
 
-    private List<List<Integer>> createIndexBasedClusters(List<List<String>> clustersByIds, Map<String, Integer> indexIdMap) {
-
-        return clustersByIds
-                .stream()
-                .map(listIds -> listIds.stream().map(indexIdMap::get).collect(Collectors.toList()))
-                .collect(Collectors.toList());
-    }
-
-    private List<List<String>> createIdsBasedClusters(List<List<Integer>> clustersByIndexed, Map<Integer, String> idIndexMap) {
-
-        return clustersByIndexed
-                .stream()
-                .map(listIds -> listIds.stream().map(idIndexMap::get).collect(Collectors.toList()))
-                .collect(Collectors.toList());
-    }
-
-    private Map<Integer, Pair<Integer, Long>> orderDistances(Map<Integer, Pair<Integer, Long>> nonOrdered) {
-
-        return nonOrdered.entrySet()
-                .stream()
-                .sorted(Comparator.comparing(e -> e.getValue().getValue()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
-    }
-
-    private void moveElementToAnotherCluster(List<Integer> currentCluster, Integer elementIndex,
-                                             Integer nearestNeighborIndex, List<List<Integer>> clustersByIndexes) {
-        log.info("'moveElementToAnotherCluster' params '{}, {}, {}, {}", currentCluster, elementIndex, nearestNeighborIndex, clustersByIndexes);
-
-        currentCluster.remove(elementIndex);
-
-        List<Integer> newCluster = clustersByIndexes
-                .stream().filter(cluster -> cluster.contains(nearestNeighborIndex)).findAny().get();
-        newCluster.add(elementIndex);
-    }
-
-    private Map<Integer, String> createIndexIdMap(List<KMeansRow> matrix) {
-
-        Map<Integer, String> indexIdMap = new HashMap<>();
-
-        for (int i = 0; i < matrix.size(); i++) {
-            indexIdMap.put(i, matrix.get(i).getId());
-        }
-
-        return indexIdMap;
-    }
-
-    private Map<String, Integer> createIdIndexMap(List<KMeansRow> matrix) {
-
-        Map<String, Integer> idIndexMap = new HashMap<>();
-
-        for (int i = 0; i < matrix.size(); i++) {
-            idIndexMap.put(matrix.get(i).getId(), i);
-        }
-
-        return idIndexMap;
-    }
-
-    private List<String> getIdsWithOutCurrent(List<String> ids, String excludedId) {
-        List<String> idsWithoutCurrent = new ArrayList<>(ids);
-        while (idsWithoutCurrent.contains(excludedId))
-            idsWithoutCurrent.remove(excludedId);
-        return idsWithoutCurrent;
-    }
-
-    public List<Set<String>> deleteDuplicatesFromCluster(List<List<String>> clustersWithDuplicates) {
-        return clustersWithDuplicates
-                .stream().map(list -> list.stream().map(id -> id.split("/")[0]).collect(Collectors.toSet()))
-                .collect(Collectors.toList());
-    }
-
-    public Map<String, Integer> calculateDuplications(List<List<String>> clustersWithDuplicates) {
-        Map<String, Integer> calculatedMap = new HashMap<>();
-        clustersWithDuplicates.forEach(list -> list.forEach(idUUID -> {
-            String id = idUUID.split("/")[0];
-            if (calculatedMap.containsKey(id)) {
-                calculatedMap.put(id, calculatedMap.get(id) + 1);
-            } else {
-                calculatedMap.put(id, 1);
-            }
-        }));
-        return calculatedMap;
-    }
-
     public List<ShortestPathRow> buildMatrixForShortestPath(List<String> ids, List<MapObject> mapObjects) {
-        log.info("'buildMatrixForShortestPath' params'{}, {}'", ids, mapObjects);
+//        log.info("'buildMatrixForShortestPath' params'{}, {}'", ids, mapObjects);
 
         MapObject start = mapObjects.stream()
                 .filter(mo -> mo.getDescription().equals(MapObjectDescriptionValues.START.toString())).findAny().get();
@@ -376,5 +275,144 @@ public class TaskServiceImpl implements TaskService {
 //            shortestPathRows.add(shortestPathRow);
 //        });
         return shortestPathRows;
+    }
+
+    private Task createTask(List<String> pathIds, String companyId, Map<String, Integer> duplications, String containerValue) {
+        List<TaskPoint> taskPoints = new ArrayList<>();
+
+        for (int i = 1; i < pathIds.size(); i++) {
+
+            TaskPoint taskPoint = new TaskPoint();
+
+            if (i == 1) {
+                taskPoint.setType(MapObjectDescriptionValues.START);
+            } else if (i == pathIds.size() - 1) {
+                taskPoint.setType(MapObjectDescriptionValues.FINISH);
+            } else {
+                taskPoint.setType(MapObjectDescriptionValues.CONTAINER);
+            }
+
+            if (i != pathIds.size() - 1) {
+                taskPoint.setAmount(duplications.get(pathIds.get(i)));
+            } else {
+                taskPoint.setAmount(0);
+            }
+
+            taskPoint.setRoute(routeRepository.findByStartIdAndFinishId(pathIds.get(i - 1), pathIds.get(i)));
+
+            taskPoints.add(taskPoint);
+        }
+
+        Task task = new Task();
+        task.setActive(true);
+        task.setCompanyId(companyId);
+        task.setPoints(taskPoints);
+        task.setContainerValue(containerValue);
+
+        return task;
+    }
+
+
+
+    private Map<String, List<String>> createRequestByType(Collection<Container> allByOwnerId) {
+
+        Map<String, List<String>> requestsByType = new HashMap<>();
+        for (ContainerValues containerValues : ContainerValues.values()) {
+            requestsByType.put(containerValues.toString(), new ArrayList<>());
+        }
+
+        allByOwnerId.forEach(container ->
+                container.getDetails().forEach(dt -> {
+                    if (dt.isFull()) {
+                        requestsByType.get(dt.getType().toString()).addAll(Collections.nCopies(dt.getAmount(), container.getId()));
+                    }
+                }));
+
+        return requestsByType;
+    }
+
+    private List<List<Integer>> createIndexBasedClusters(List<List<String>> clustersByIds, Map<String, Integer> indexIdMap) {
+
+        return clustersByIds
+                .stream()
+                .map(listIds -> listIds.stream().map(indexIdMap::get).collect(Collectors.toList()))
+                .collect(Collectors.toList());
+    }
+
+    private List<List<String>> createIdsBasedClusters(List<List<Integer>> clustersByIndexed, Map<Integer, String> idIndexMap) {
+
+        return clustersByIndexed
+                .stream()
+                .map(listIds -> listIds.stream().map(idIndexMap::get).collect(Collectors.toList()))
+                .collect(Collectors.toList());
+    }
+
+    private Map<Integer, Pair<Integer, Long>> orderDistances(Map<Integer, Pair<Integer, Long>> nonOrdered) {
+
+        return nonOrdered.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(e -> e.getValue().getValue()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+    }
+
+    private void moveElementToAnotherCluster(List<Integer> currentCluster, Integer elementIndex,
+                                             Integer nearestNeighborIndex, List<List<Integer>> clustersByIndexes) {
+//        log.info("'moveElementToAnotherCluster' params '{}, {}, {}, {}", currentCluster, elementIndex, nearestNeighborIndex, clustersByIndexes);
+
+        currentCluster.remove(elementIndex);
+
+        List<Integer> newCluster = clustersByIndexes
+                .stream().filter(cluster -> cluster.contains(nearestNeighborIndex)).findAny().get();
+        newCluster.add(elementIndex);
+    }
+
+    private Map<Integer, String> createIndexIdMap(List<KMeansRow> matrix) {
+
+        Map<Integer, String> indexIdMap = new HashMap<>();
+
+        for (int i = 0; i < matrix.size(); i++) {
+            indexIdMap.put(i, matrix.get(i).getId());
+        }
+
+        return indexIdMap;
+    }
+
+    private Map<String, Integer> createIdIndexMap(List<KMeansRow> matrix) {
+
+        Map<String, Integer> idIndexMap = new HashMap<>();
+
+        for (int i = 0; i < matrix.size(); i++) {
+            idIndexMap.put(matrix.get(i).getId(), i);
+        }
+
+        return idIndexMap;
+    }
+
+    private List<String> getIdsWithOutCurrent(List<String> ids, String excludedId) {
+        List<String> idsWithoutCurrent = new ArrayList<>(ids);
+        while (idsWithoutCurrent.contains(excludedId))
+            idsWithoutCurrent.remove(excludedId);
+        return idsWithoutCurrent;
+    }
+
+    public List<List<String>> deleteDuplicatesFromCluster(List<List<String>> clustersWithDuplicates) {
+        return clustersWithDuplicates
+                .stream()
+                .map(list -> new ArrayList<>(list.stream().map(id -> id.split("/")[0]).collect(Collectors.toSet())))
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Integer> calculateDuplications(List<List<String>> clustersWithDuplicates) {
+        Map<String, Integer> calculatedMap = new HashMap<>();
+        clustersWithDuplicates.forEach(list -> list.forEach(idUUID -> {
+            String id = idUUID.split("/")[0];
+            if (calculatedMap.containsKey(id)) {
+                calculatedMap.put(id, calculatedMap.get(id) + 1);
+            } else {
+                calculatedMap.put(id, 1);
+            }
+        }));
+        return calculatedMap;
     }
 }

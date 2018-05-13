@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.repository;
+package com.kpi.diploma.smartroads.repository.user;
 
 import com.kpi.diploma.smartroads.model.document.user.Driver;
 import com.kpi.diploma.smartroads.model.document.user.User;

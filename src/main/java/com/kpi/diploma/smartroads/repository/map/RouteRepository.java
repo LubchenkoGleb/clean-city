@@ -1,4 +1,4 @@
-package com.kpi.diploma.smartroads.repository;
+package com.kpi.diploma.smartroads.repository.map;
 
 import com.kpi.diploma.smartroads.model.document.map.Route;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -12,4 +12,6 @@ public interface RouteRepository extends MongoRepository<Route, String> {
     List<Route> findAllByLengthLessThan(Long value);
 
     void deleteAllByStartIdOrFinishId(String startId, String finishId);
+
+    Route findByStartIdAndFinishId(String startId, String finishId);
 }

@@ -1,7 +1,7 @@
 package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
-import com.kpi.diploma.smartroads.repository.MapObjectRepository;
+import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

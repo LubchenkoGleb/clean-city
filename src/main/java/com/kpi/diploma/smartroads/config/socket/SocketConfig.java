@@ -1,6 +1,6 @@
 package com.kpi.diploma.smartroads.config.socket;
 
-import com.kpi.diploma.smartroads.repository.MapObjectRepository;
+import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 import com.kpi.diploma.smartroads.socket.MapObjectSecuredSocketHandler;
 import com.kpi.diploma.smartroads.socket.MapObjectUnsecuredSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;

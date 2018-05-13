@@ -14,7 +14,12 @@ import com.kpi.diploma.smartroads.model.util.exception.ResourseDoesntBelongToUse
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectRequestValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
-import com.kpi.diploma.smartroads.repository.*;
+import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
+import com.kpi.diploma.smartroads.repository.map.RouteRepository;
+import com.kpi.diploma.smartroads.repository.user.CompanyRepository;
+import com.kpi.diploma.smartroads.repository.user.DriverRepository;
+import com.kpi.diploma.smartroads.repository.user.ManagerRepository;
+import com.kpi.diploma.smartroads.repository.user.RoleRepository;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import com.kpi.diploma.smartroads.service.primary.MapObjectService;
 import com.kpi.diploma.smartroads.service.util.email.EmailService;
