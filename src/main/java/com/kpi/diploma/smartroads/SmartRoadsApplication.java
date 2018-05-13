@@ -63,15 +63,15 @@ public class SmartRoadsApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-//        roleRepository.deleteAll();
-//        mapObjectRepository.deleteAll();
-//        userRepository.deleteAll();
-//        routeRepository.deleteAll();
-//
-//        initRoles();
-//        initUsers();
-//
-//        log.info("test data was init");
+        roleRepository.deleteAll();
+        mapObjectRepository.deleteAll();
+        userRepository.deleteAll();
+        routeRepository.deleteAll();
+
+        initRoles();
+        initUsers();
+
+        log.info("test data was init");
     }
 
     private void initRoles() {
