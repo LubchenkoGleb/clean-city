@@ -15,8 +15,10 @@ import com.kpi.diploma.smartroads.repository.map.RouteRepository;
 import com.kpi.diploma.smartroads.service.primary.TaskService;
 import com.kpi.diploma.smartroads.service.util.ConversionService;
 import com.kpi.diploma.smartroads.service.util.http.HttpMethods;
-import javafx.util.Pair;
+//import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -172,7 +174,7 @@ public class TaskServiceImpl implements TaskService {
 
             Map<Integer, Pair<Integer, Long>> currentClusterDistances = new HashMap<>();
             for (Integer id : currentClusterIndexes) {
-                currentClusterDistances.put(id, new Pair<>(-1, Long.MAX_VALUE));
+                currentClusterDistances.put(id, new ImmutablePair<>(-1, Long.MAX_VALUE));
             }
 
             for (Integer currentClusterIndex : currentClusterIndexes) {
@@ -183,7 +185,7 @@ public class TaskServiceImpl implements TaskService {
 //                        log.info("i={}, j={}, oldDist={}, newDist={}", currentClusterIndex, i, currentClusterDistances.get(currentClusterIndex), avgDist);
 
                         if (avgDist < currentClusterDistances.get(currentClusterIndex).getValue()) {
-                            currentClusterDistances.put(currentClusterIndex, new Pair<>(i, avgDist));
+                            currentClusterDistances.put(currentClusterIndex, new ImmutablePair<>(i, avgDist));
                         }
                     }
                 }
