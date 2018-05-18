@@ -156,5 +156,12 @@ public class TaskServiceTest {
         return ((Double) ceil).intValue();
     }
 
+    @Test
+    public void testAddAllOnZeroAmount() {
 
+        List<String> testList = new ArrayList<>();
+        testList.addAll(Collections.nCopies(0, "test"));
+        Assert.assertTrue(testList.isEmpty());
+
+    }
 }

@@ -33,7 +33,10 @@ logging:
   level:
     org:
       springframework:
-        web: DEBUG
+        web: INFO
+    com:
+      kpi:
+        diploma: DEBUG
 
 #  devtools:
 #    remote:

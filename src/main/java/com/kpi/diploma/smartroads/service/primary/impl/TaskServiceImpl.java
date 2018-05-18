@@ -5,31 +5,40 @@ import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
 import com.kpi.diploma.smartroads.model.document.map.Task;
 import com.kpi.diploma.smartroads.model.document.map.TaskPoint;
+import com.kpi.diploma.smartroads.model.document.user.Company;
 import com.kpi.diploma.smartroads.model.util.data.kmeans.KMEansRequest;
 import com.kpi.diploma.smartroads.model.util.data.kmeans.KMeansRow;
 import com.kpi.diploma.smartroads.model.util.data.shortest.path.ShortestPathRow;
+import com.kpi.diploma.smartroads.model.util.exception.CompanyEndpoinsNotSet;
+import com.kpi.diploma.smartroads.model.util.exception.TaskCreationException;
 import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 import com.kpi.diploma.smartroads.repository.map.RouteRepository;
+import com.kpi.diploma.smartroads.repository.map.TaskRepository;
+import com.kpi.diploma.smartroads.repository.user.CompanyRepository;
 import com.kpi.diploma.smartroads.service.primary.TaskService;
 import com.kpi.diploma.smartroads.service.util.ConversionService;
 import com.kpi.diploma.smartroads.service.util.http.HttpMethods;
-//import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+
+//import javafx.util.Pair;
 
 @Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    private final int GARBAGE_TRUCK_CAPACITY = 4;
+    private final int GARBAGE_TRUCK_CAPACITY = 5;
 
     private final HttpMethods httpMethods;
 
@@ -37,12 +46,20 @@ public class TaskServiceImpl implements TaskService {
 
     private final MapObjectRepository mapObjectRepository;
 
+    private final CompanyRepository companyRepository;
+
+    private final TaskRepository taskRepository;
+
     public TaskServiceImpl(HttpMethods httpMethods,
                            RouteRepository routeRepository,
-                           MapObjectRepository mapObjectRepository) {
+                           MapObjectRepository mapObjectRepository,
+                           CompanyRepository companyRepository,
+                           TaskRepository taskRepository) {
         this.httpMethods = httpMethods;
         this.routeRepository = routeRepository;
         this.mapObjectRepository = mapObjectRepository;
+        this.companyRepository = companyRepository;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -51,8 +68,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public JsonNode createTaskForService(String serviceId) {
+    public List<Task> createTaskForService(String serviceId) {
         log.info("'createTaskForService' invoked with params'{}'", serviceId);
+
+        validate(serviceId);
 
         List<MapObject> allByOwnerId = mapObjectRepository.findAllByOwnerId(serviceId);
         log.info("'allByOwnerId={}'", allByOwnerId);
@@ -65,49 +84,85 @@ public class TaskServiceImpl implements TaskService {
         Map<String, List<String>> requestsByType = createRequestByType(idContainerMap.values());
 
         List<Task> response = new ArrayList<>();
+        ExecutorService executor = Executors.newWorkStealingPool();
 
-        requestsByType.forEach((type, ids) -> {
+        requestsByType.forEach((type, ids) -> executor.submit(() -> {
 
-            List<KMeansRow> kMeansRows = createKMeansMatrix(ids, idContainerMap);
-//            log.info("kMeansRows={}", ConversionService.convertToJsonNode(kMeansRows));
+            if (!ids.isEmpty()) {
 
-            List<List<String>> clusters = getClusters(kMeansRows);
-            clusters = normalizeKMeans(GARBAGE_TRUCK_CAPACITY, clusters, kMeansRows);
-//            log.debug("after clusters={}", clusters);
-            Map<String, Integer> duplications = calculateDuplications(clusters);
+                List<KMeansRow> kMeansRows = createKMeansMatrix(ids, idContainerMap);
+                log.debug("kMeansRows for type'{}' = '{}'", type, kMeansRows);
+
+                List<List<String>> clusters = getClusters(kMeansRows);
+                clusters = normalizeKMeans(GARBAGE_TRUCK_CAPACITY, clusters, kMeansRows);
+                log.debug("after clusters={}", clusters);
+
+                Map<String, Integer> duplications = calculateDuplications(clusters);
 //            log.debug("'duplications={}'", duplications);
-            List<List<String>> clustersWithoutDuplications = deleteDuplicatesFromCluster(clusters);
+                List<List<String>> clustersWithoutDuplications = deleteDuplicatesFromCluster(clusters);
 //            log.info("'clustersWithoutDuplications={}'", clustersWithoutDuplications);
 
-            List<List<ShortestPathRow>> clustersForShortestPath = new ArrayList<>();
-            clustersWithoutDuplications.forEach(cluster ->
-                    clustersForShortestPath.add(buildMatrixForShortestPath(cluster, allByOwnerId)));
-            List<List<String>> shortestPaths = getShortestPath(clustersForShortestPath);
+                List<List<ShortestPathRow>> clustersForShortestPath = new ArrayList<>();
+                clustersWithoutDuplications.forEach(cluster ->
+                        clustersForShortestPath.add(buildMatrixForShortestPath(cluster, allByOwnerId)));
+                log.debug("'clustersForShortestPath={}'", clustersForShortestPath);
 
-            shortestPaths.forEach(cluster -> response.add(createTask(cluster, serviceId, duplications, type)));
-        });
+                List<List<String>> shortestPaths = getShortestPath(clustersForShortestPath);
 
-        return ConversionService.convertToJsonNode(response);
+                shortestPaths.forEach(cluster -> response.add(createTask(cluster, serviceId, duplications, type)));
+            }
+        }));
 
+        executor.shutdown();
+
+        try {
+            executor.awaitTermination(20, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new TaskCreationException(e.getMessage());
+        }
+
+        return taskRepository.save(response);
     }
 
-    private List<KMeansRow> createKMeansMatrix(List<String> ids, Map<String, Container> idContainerMap ) {
+    private Company validate(String companyId) {
+
+        Company company = companyRepository.findOne(companyId);
+
+        if (company.getStart() == null || company.getFinish() == null) {
+            throw new CompanyEndpoinsNotSet("company should have start and finish to process task");
+        }
+
+        return company;
+    }
+
+    private List<KMeansRow> createKMeansMatrix(List<String> ids, Map<String, Container> idContainerMap) {
         // TODO: 10/05/18 optimize for same ids
         List<KMeansRow> kMeansRows = new ArrayList<>();
-        ids.forEach(id -> {
 
-            List<String> idsWithoutCurrent = getIdsWithOutCurrent(ids, id);
+        for (int i = 0; i < ids.size(); i++) {
 
-            List<Long> distanceToOtherObjects = getDistanceToOtherObjects(idContainerMap.get(id), idsWithoutCurrent);
+            String id = ids.get(i);
 
-            int firstIndex = ids.indexOf(id);
-            int lastIndex = ids.lastIndexOf(id);
+            if (i != 0 && ids.get(i - 1).equals(id)) {
+                KMeansRow previousRow = kMeansRows.get(kMeansRows.size() - 1);
+                KMeansRow newRow = previousRow.toBuilder().build();
+                newRow.setId(previousRow.getId().split("/")[0] + "/" + UUID.randomUUID());
+                kMeansRows.add(newRow);
+            } else {
+                List<String> idsWithoutCurrent = getIdsWithOutCurrent(ids, id);
 
-            distanceToOtherObjects.addAll(firstIndex, Collections.nCopies(lastIndex - firstIndex + 1, 0L));
+                List<Long> distanceToOtherObjects = getDistanceToOtherObjects(idContainerMap.get(id), idsWithoutCurrent);
 
-            KMeansRow row = new KMeansRow(id + "/" + UUID.randomUUID(), distanceToOtherObjects);
-            kMeansRows.add(row);
-        });
+                int firstIndex = ids.indexOf(id);
+                int lastIndex = ids.lastIndexOf(id);
+
+                distanceToOtherObjects.addAll(firstIndex, Collections.nCopies(lastIndex - firstIndex + 1, 0L));
+
+                KMeansRow row = new KMeansRow(id + "/" + UUID.randomUUID(), distanceToOtherObjects);
+                kMeansRows.add(row);
+            }
+        }
+
         return kMeansRows;
     }
 
@@ -315,7 +370,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-
     private Map<String, List<String>> createRequestByType(Collection<Container> allByOwnerId) {
 
         Map<String, List<String>> requestsByType = new HashMap<>();
@@ -325,10 +379,15 @@ public class TaskServiceImpl implements TaskService {
 
         allByOwnerId.forEach(container ->
                 container.getDetails().forEach(dt -> {
-                    if (dt.isFull()) {
+                    if (dt.isFull() && !dt.isPending()) {
                         requestsByType.get(dt.getType().toString()).addAll(Collections.nCopies(dt.getAmount(), container.getId()));
+                        dt.setPending(true);
                     }
                 }));
+
+
+        mapObjectRepository.save(allByOwnerId);
+        log.debug("'createRequestByType' response '{}'", requestsByType);
 
         return requestsByType;
     }

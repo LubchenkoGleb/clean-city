@@ -11,4 +11,6 @@ public class MapObjectDetail {
     private ContainerValues type;
 
     private boolean isFull;
+
+    private boolean pending;
 }

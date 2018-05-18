@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kpi.diploma.smartroads.model.util.exception.HttpException;
 import com.kpi.diploma.smartroads.service.util.ConversionService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 public class HttpRequest {
@@ -86,10 +89,9 @@ public class HttpRequest {
         String jsonString = ConversionService.convertToJsonString(body);
         log.info("'setBody' params'{}'", jsonString);
 
-        httpRequestBase.addHeader("content-type", "application/json");
+        httpRequestBase.addHeader("Content-Type", "application/json");
 
         try {
-
 
             StringEntity requestEntity = new StringEntity(jsonString);
             ((HttpEntityEnclosingRequestBase) httpRequestBase).setEntity(requestEntity);
@@ -115,7 +117,11 @@ public class HttpRequest {
     }
 
     public HttpResponse sendWithCipHttpResponse() {
-        log.info("'sendWithCipHttpResponse' invoked for'{}'", httpRequestBase);
+        log.debug("'sendWithCipHttpResponse' invoked for'{}'", httpRequestBase);
+        for (Header header : httpRequestBase.getAllHeaders()) {
+            log.debug("header={}, value={}", header.getName(), header.getValue());
+        }
+
 
         org.apache.http.HttpResponse execute = null;
         try {
@@ -123,14 +129,14 @@ public class HttpRequest {
             HttpEntity entity = execute.getEntity();
 
             if (entity.getContentLength() != 0 && !entity.getContentType().toString().startsWith(JSON_VALUE)) {
-
+                log.error("content=" + IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8.name()));
                 String message = "IncorrectContentTypeException. Content-Type - " + execute.getEntity().getContentType();
                 log.error(message);
                 throw new HttpException(message);
 
             }
 
-            InputStream responseBodyInputStream = execute.getEntity().getContent();
+            InputStream responseBodyInputStream = entity.getContent();
             JsonNode body = mapper.readTree(responseBodyInputStream);
             HttpResponse response = new HttpResponse(body, execute.getStatusLine().getStatusCode());
             log.info("response body - '" + body + "', status - " + execute.getStatusLine());

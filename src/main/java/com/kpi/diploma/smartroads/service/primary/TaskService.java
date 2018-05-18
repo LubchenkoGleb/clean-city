@@ -1,10 +1,12 @@
 package com.kpi.diploma.smartroads.service.primary;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.kpi.diploma.smartroads.model.document.map.Task;
+
+import java.util.List;
 
 public interface TaskService {
 
     void createTasksForAllServices();
 
-    JsonNode createTaskForService(String serviceId);
+    List<Task> createTaskForService(String serviceId);
 }
