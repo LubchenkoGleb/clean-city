@@ -35,7 +35,8 @@ public class ResourcesServerConfiguration extends ResourceServerConfigurerAdapte
                         "/driver-requests/confirm",
                         "/manager-requests/confirm",
                         "/socket/map-object/all/**",
-                        "/map-object-requests/get-details/**").permitAll()
+                        "/map-object-requests/get-details/**",
+                        "/fill-db-with-test-data").permitAll()
                 .anyRequest().authenticated();
     }
 }
