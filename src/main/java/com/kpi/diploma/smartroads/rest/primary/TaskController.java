@@ -26,6 +26,9 @@ public class TaskController {
     private ResponseEntity<List<Task>> createTasks(@PathVariable String companyId) {
         log.info("'createTasks' invoked with params'{}'", companyId);
 
-        return ResponseEntity.ok(taskService.createTaskForService(companyId));
+        List<Task> taskForService = taskService.createTaskForService(companyId);
+        log.info("'taskForService={}'", taskForService);
+
+        return ResponseEntity.ok(taskForService);
     }
 }

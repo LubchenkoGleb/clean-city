@@ -32,8 +32,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
-//import javafx.util.Pair;
-
 @Slf4j
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -133,7 +131,6 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllActiveTaskByCompany(String companyId) {
         return taskRepository.findAllByActiveIsTrueAndCompanyId(companyId);
     }
-
 
     private Company validate(String companyId) {
 

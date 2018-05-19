@@ -108,5 +108,11 @@ public class AdminController {
         adminService.fillDbWithInitData();
         return ResponseEntity.ok(true);
     }
+
+    @PostMapping(value = "/set-pending-false-to-all-containers")
+    private ResponseEntity<Boolean> setPendingFalseToAllContainers() {
+        adminService.setAllContainersToPending();
+        return ResponseEntity.ok(true);
+    }
 }
 

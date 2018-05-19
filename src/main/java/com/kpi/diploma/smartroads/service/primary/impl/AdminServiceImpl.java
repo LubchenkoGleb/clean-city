@@ -1,9 +1,12 @@
 package com.kpi.diploma.smartroads.service.primary.impl;
 
+import com.kpi.diploma.smartroads.model.document.map.Container;
 import com.kpi.diploma.smartroads.model.document.user.*;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
+import com.kpi.diploma.smartroads.repository.map.ContainerRepository;
 import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 import com.kpi.diploma.smartroads.repository.map.RouteRepository;
+import com.kpi.diploma.smartroads.repository.map.TaskRepository;
 import com.kpi.diploma.smartroads.repository.user.*;
 import com.kpi.diploma.smartroads.service.primary.AdminService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,23 +22,21 @@ public class AdminServiceImpl implements AdminService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final RouteRepository routeRepository;
-    private final CompanyRepository companyRepository;
-    private final DriverRepository driverRepository;
-    private final ManagerRepository managerRepository;
+    private final TaskRepository taskRepository;
     private final MapObjectRepository mapObjectRepository;
+    private final ContainerRepository containerRepository;
 
     public AdminServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                             RoleRepository roleRepository, RouteRepository routeRepository,
-                            CompanyRepository companyRepository, DriverRepository driverRepository,
-                            ManagerRepository managerRepository, MapObjectRepository mapObjectRepository) {
+                            TaskRepository taskRepository, MapObjectRepository mapObjectRepository,
+                            ContainerRepository containerRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.routeRepository = routeRepository;
-        this.companyRepository = companyRepository;
-        this.driverRepository = driverRepository;
-        this.managerRepository = managerRepository;
+        this.taskRepository = taskRepository;
         this.mapObjectRepository = mapObjectRepository;
+        this.containerRepository = containerRepository;
     }
 
     @Override
@@ -44,10 +45,19 @@ public class AdminServiceImpl implements AdminService {
         mapObjectRepository.deleteAll();
         userRepository.deleteAll();
         routeRepository.deleteAll();
+        taskRepository.deleteAll();
 
         initRoles();
         initUsers();
     }
+
+    @Override
+    public void setAllContainersToPending() {
+        List<Container> containers = containerRepository.findAll();
+        containers.forEach(c -> c.getDetails().forEach(d -> d.setPending(false)));
+        containerRepository.save(containers);
+    }
+
 
     private void initRoles() {
         Role roleCompany = new Role(RoleValues.COMPANY);
@@ -94,13 +104,13 @@ public class AdminServiceImpl implements AdminService {
             company.getRoles().add(companyRole);
             company.getDrivers().addAll(drivers);
             company.getManagers().addAll(manager);
-            Company savedCompany = companyRepository.save(company);
+            Company savedCompany = userRepository.save(company);
 
             drivers.forEach(dr -> dr.setBoss(savedCompany));
-            driverRepository.save(drivers);
+            userRepository.save(drivers);
 
             manager.forEach(mn -> mn.setBoss(savedCompany));
-            managerRepository.save(manager);
+            userRepository.save(manager);
         }
     }
 
@@ -117,7 +127,7 @@ public class AdminServiceImpl implements AdminService {
             driver.setPassword(passwordEncoder.encode("1234"));
             driver.setEnable(true);
             driver.getRoles().add(driverRole);
-            driver = driverRepository.save(driver);
+            driver = userRepository.save(driver);
             drivers.add(driver);
         }
         return drivers;
@@ -136,7 +146,7 @@ public class AdminServiceImpl implements AdminService {
             manager.setPassword(passwordEncoder.encode("1234"));
             manager.setEnable(true);
             manager.getRoles().add(managerRole);
-            manager = managerRepository.save(manager);
+            manager = userRepository.save(manager);
             managers.add(manager);
         }
         return managers;
