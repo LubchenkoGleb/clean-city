@@ -35,6 +35,10 @@ public class GoogleService {
                 distance += leg.distance.inMeters;
             }
 
+            if(distance == 0) {
+                throw new Exception("rout built unsuccessfully");
+            }
+
             return new GoogleRoute(distance, route.overviewPolyline.getEncodedPath());
 
         } catch (Exception e) {

@@ -44,10 +44,15 @@ pipeline {
         stage('deploy') {
             steps {
                 script {
-                    for (int i = 0; i < modules.size(); i++) {
-//                        pullCommand += 'docker pull ' + dockerHub + '/' + modules[i].serviceName + ':google;'
-                        sh 'docker run --net=host -p ' + modules[i].port + ':' + modules[i].port + ' ' + dockerHub + '/' + modules[i].serviceName + '&'
-                    }
+                    sh 'echo test0'
+                    sh 'docker ps -qaf ancestor=gleblubchenko/smart-roads'
+                    sh 'echo test1'
+                    sh 'echo $(docker ps -qaf ancestor=gleblubchenko/smart-roads)'
+                    sh 'echo test2'
+                    sh 'echo \$(docker ps -qaf ancestor=gleblubchenko/smart-roads) '
+                    sh "docker stop \$(docker ps -qaf ancestor=gleblubchenko/smart-roads) || true"
+                    sh "docker rm \$(docker ps -qaf ancestor=gleblubchenko/smart-roads) || true"
+//                    sh 'docker run --net=host -p 8000:8000 gleblubchenko/smart-roads &'
                 }
             }
         }

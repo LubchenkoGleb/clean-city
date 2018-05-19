@@ -89,17 +89,5 @@ public class AdminController {
 
         return ResponseEntity.ok(mapObjectDto);
     }
-    @PostMapping(value = "/fill-db-with-test-data")
-    private ResponseEntity<Boolean> fillDb() {
-        adminService.fillDbWithInitData();
-        return ResponseEntity.ok(true);
-    }
-
-    @PostMapping(value = "/set-state-of-all-containers")
-    private ResponseEntity<Boolean> setStateOfAllContainers(
-            @RequestParam boolean pending, @RequestParam boolean fullness) {
-        adminService.setStateOfAllContainers(pending, fullness);
-        return ResponseEntity.ok(true);
-    }
 }
 
