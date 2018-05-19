@@ -8,7 +8,7 @@ public interface DriverRepository extends MongoRepository<Driver, String> {
 
     Driver findByInviteKey(String inviteUrl);
 
-    User findByEmail(String email);
+    Driver findByEmail(String email);
 
     Driver findByIdAndBossId(String id, String bossId);
 }

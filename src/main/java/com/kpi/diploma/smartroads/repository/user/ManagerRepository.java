@@ -9,7 +9,7 @@ public interface ManagerRepository extends MongoRepository<Manager, String> {
 
     Manager findByInviteKey(String inviteUrl);
 
-    User findByEmail(String email);
+    Manager findByEmail(String email);
 
     Manager findByIdAndBossId(String id, String bossId);
 }
