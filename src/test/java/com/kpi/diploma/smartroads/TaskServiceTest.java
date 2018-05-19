@@ -6,6 +6,7 @@ import com.kpi.diploma.smartroads.model.util.data.kmeans.KMeansRow;
 import com.kpi.diploma.smartroads.service.primary.impl.TaskServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,6 +122,7 @@ public class TaskServiceTest {
     }
 
     @Test
+    @Ignore
     public void testDeleteDuplicatesFromCluster() {
 
         List<List<String>> mainListWithRepeats = new ArrayList<>();

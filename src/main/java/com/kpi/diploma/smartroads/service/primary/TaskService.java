@@ -14,4 +14,6 @@ public interface TaskService {
 
     List<Task> getAllActiveTaskByCompany(String companyId);
 
+    Task get(String id);
+
 }

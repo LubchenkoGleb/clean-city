@@ -1,15 +1,10 @@
 server:
   port: 8000
 
-#spring:
-#  data:
-#    mongodb:
-#      database: smartroads
 spring:
   data:
     mongodb:
-      uri: mongodb://gleb:root@ds111319.mlab.com:11319/heroku_wb0cp1lr
-      database: heroku_wb0cp1lr
+      database: smartroads
 
   redis:
     host: 127.0.0.1

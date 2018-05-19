@@ -7,7 +7,8 @@ import com.kpi.diploma.smartroads.repository.map.ContainerRepository;
 import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 import com.kpi.diploma.smartroads.repository.map.RouteRepository;
 import com.kpi.diploma.smartroads.repository.map.TaskRepository;
-import com.kpi.diploma.smartroads.repository.user.*;
+import com.kpi.diploma.smartroads.repository.user.RoleRepository;
+import com.kpi.diploma.smartroads.repository.user.UserRepository;
 import com.kpi.diploma.smartroads.service.primary.AdminService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,12 +53,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void setAllContainersToPending() {
+    public void setStateOfAllContainers(boolean pending, boolean fullness) {
         List<Container> containers = containerRepository.findAll();
-        containers.forEach(c -> c.getDetails().forEach(d -> d.setPending(false)));
+        containers.forEach(c -> c.getDetails().forEach(d -> {
+            d.setPending(pending);
+            d.setFull(fullness);
+        }));
         containerRepository.save(containers);
     }
-
 
     private void initRoles() {
         Role roleCompany = new Role(RoleValues.COMPANY);

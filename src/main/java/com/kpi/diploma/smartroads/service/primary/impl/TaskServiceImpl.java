@@ -132,6 +132,11 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAllByActiveIsTrueAndCompanyId(companyId);
     }
 
+    @Override
+    public Task get(String id) {
+        return taskRepository.findOne(id);
+    }
+
     private Company validate(String companyId) {
 
         Company company = companyRepository.findOne(companyId);

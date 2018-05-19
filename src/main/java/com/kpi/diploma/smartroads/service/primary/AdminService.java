@@ -4,5 +4,5 @@ public interface AdminService {
 
     void fillDbWithInitData();
 
-    void setAllContainersToPending();
+    void setStateOfAllContainers(boolean pending, boolean fullness);
 }

@@ -30,13 +30,10 @@ public class AdminController {
 
     private final MapObjectService mapObjectService;
 
-    private final TaskService taskService;
-
-    public AdminController(AdminService adminService, CompanyService companyService, MapObjectService mapObjectService, TaskService taskService) {
+    public AdminController(AdminService adminService, CompanyService companyService, MapObjectService mapObjectService) {
         this.adminService = adminService;
         this.companyService = companyService;
         this.mapObjectService = mapObjectService;
-        this.taskService = taskService;
     }
 
     @GetMapping(value = "/companies-list")
@@ -92,26 +89,16 @@ public class AdminController {
 
         return ResponseEntity.ok(mapObjectDto);
     }
-
-    @GetMapping(value = "/get-active-task/{companyId}")
-    private ResponseEntity<List<Task>> getActiveTaskByCompany(@PathVariable String companyId) {
-        return ResponseEntity.ok(taskService.getAllActiveTaskByCompany(companyId));
-    }
-
-    @GetMapping(value = "/get-all-active-task")
-    private ResponseEntity<List<Task>> getActiveTask() {
-        return ResponseEntity.ok(taskService.getAllActiveTask());
-    }
-
     @PostMapping(value = "/fill-db-with-test-data")
     private ResponseEntity<Boolean> fillDb() {
         adminService.fillDbWithInitData();
         return ResponseEntity.ok(true);
     }
 
-    @PostMapping(value = "/set-pending-false-to-all-containers")
-    private ResponseEntity<Boolean> setPendingFalseToAllContainers() {
-        adminService.setAllContainersToPending();
+    @PostMapping(value = "/set-state-of-all-containers")
+    private ResponseEntity<Boolean> setStateOfAllContainers(
+            @RequestParam boolean pending, @RequestParam boolean fullness) {
+        adminService.setStateOfAllContainers(pending, fullness);
         return ResponseEntity.ok(true);
     }
 }

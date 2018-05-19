@@ -1,0 +1,17 @@
+logging:
+  level:
+    org:
+      springframework:
+        web: INFO
+    com:
+      kpi:
+        diploma: INFO
+
+
+sendgrid:
+  key: test
+
+cloudinary:
+  name: clean-city
+  key: test
+  secret: test
