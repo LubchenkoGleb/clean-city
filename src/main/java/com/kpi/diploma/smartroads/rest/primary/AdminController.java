@@ -7,6 +7,7 @@ import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.CompanyDto;
 import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.model.util.title.Fields;
+import com.kpi.diploma.smartroads.service.primary.AdminService;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import com.kpi.diploma.smartroads.service.primary.MapObjectService;
 import com.kpi.diploma.smartroads.service.primary.TaskService;
@@ -23,13 +24,16 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
+    private final AdminService adminService;
+
     private final CompanyService companyService;
 
     private final MapObjectService mapObjectService;
 
     private final TaskService taskService;
 
-    public AdminController(CompanyService companyService, MapObjectService mapObjectService, TaskService taskService) {
+    public AdminController(AdminService adminService, CompanyService companyService, MapObjectService mapObjectService, TaskService taskService) {
+        this.adminService = adminService;
         this.companyService = companyService;
         this.mapObjectService = mapObjectService;
         this.taskService = taskService;
@@ -88,6 +92,7 @@ public class AdminController {
 
         return ResponseEntity.ok(mapObjectDto);
     }
+
     @GetMapping(value = "/get-active-task/{companyId}")
     private ResponseEntity<List<Task>> getActiveTaskByCompany(@PathVariable String companyId) {
         return ResponseEntity.ok(taskService.getAllActiveTaskByCompany(companyId));
@@ -97,4 +102,11 @@ public class AdminController {
     private ResponseEntity<List<Task>> getActiveTask() {
         return ResponseEntity.ok(taskService.getAllActiveTask());
     }
+
+    @PostMapping(value = "/fill-db-with-test-data")
+    private ResponseEntity<Boolean> fillDb() {
+        adminService.fillDbWithInitData();
+        return ResponseEntity.ok(true);
+    }
 }
+
