@@ -9,4 +9,6 @@ public interface ContainerRepository extends MongoRepository<Container, String> 
 
 
     List<Container> findAllByOwnerId(String ownerId);
+
+    List<Container> findAllByIdIn(List<String> ids);
 }

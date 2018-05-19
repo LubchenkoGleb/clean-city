@@ -19,6 +19,8 @@ public class Driver extends User {
 
     private String lastName;
 
+    private String activeTaskId;
+
     @DBRef(lazy = true)
     @JsonIgnore
     private User boss;

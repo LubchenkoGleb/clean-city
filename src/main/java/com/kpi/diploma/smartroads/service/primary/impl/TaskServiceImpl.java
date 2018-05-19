@@ -10,7 +10,7 @@ import com.kpi.diploma.smartroads.model.util.data.kmeans.KMEansRequest;
 import com.kpi.diploma.smartroads.model.util.data.kmeans.KMeansRow;
 import com.kpi.diploma.smartroads.model.util.data.shortest.path.ShortestPathRow;
 import com.kpi.diploma.smartroads.model.util.exception.CompanyEndpoinsNotSet;
-import com.kpi.diploma.smartroads.model.util.exception.TaskCreationException;
+import com.kpi.diploma.smartroads.model.util.exception.TaskException;
 import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
 import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
@@ -118,11 +118,22 @@ public class TaskServiceImpl implements TaskService {
         try {
             executor.awaitTermination(20, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            throw new TaskCreationException(e.getMessage());
+            throw new TaskException(e.getMessage());
         }
 
         return taskRepository.save(response);
     }
+
+    @Override
+    public List<Task> getAllActiveTask() {
+        return taskRepository.findAllByActiveTrue();
+    }
+
+    @Override
+    public List<Task> getAllActiveTaskByCompany(String companyId) {
+        return taskRepository.findAllByActiveIsTrueAndCompanyId(companyId);
+    }
+
 
     private Company validate(String companyId) {
 

@@ -1,6 +1,5 @@
 package com.kpi.diploma.smartroads.model.document.map;
 
-import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
@@ -20,5 +19,7 @@ public class Task {
 
     private String containerValue;
 
-    private boolean isActive;
+    private boolean active;
+
+    private boolean assigned;
 }

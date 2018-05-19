@@ -1,15 +1,11 @@
 package com.kpi.diploma.smartroads;
 
 import com.kpi.diploma.smartroads.model.document.map.Container;
-import com.kpi.diploma.smartroads.model.document.user.Role;
 import com.kpi.diploma.smartroads.model.document.map.MapObject;
-import com.kpi.diploma.smartroads.model.document.user.Company;
-import com.kpi.diploma.smartroads.model.document.user.Driver;
-import com.kpi.diploma.smartroads.model.document.user.Manager;
-import com.kpi.diploma.smartroads.model.document.user.User;
+import com.kpi.diploma.smartroads.model.document.user.*;
 import com.kpi.diploma.smartroads.model.util.data.MapObjectDetail;
-import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.ContainerValues;
+import com.kpi.diploma.smartroads.model.util.title.value.MapObjectDescriptionValues;
 import com.kpi.diploma.smartroads.model.util.title.value.RoleValues;
 import com.kpi.diploma.smartroads.repository.map.MapObjectRepository;
 import com.kpi.diploma.smartroads.repository.map.RouteRepository;
@@ -130,7 +126,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
             manager.forEach(mn -> mn.setBoss(savedCompany));
             managerRepository.save(manager);
 
-            if(i != 2) {
+            if (i != 2) {
                 initContainers(company);
             }
         }
@@ -146,7 +142,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
             driver.setEmail("driver" + i + "_" + companyName + "@email.com");
             driver.setFirstName("driver" + i + "_firstName");
             driver.setLastName("driver" + i + "_lastName");
-            driver.setPassword(passwordEncoder.encode("driver" + i));
+            driver.setPassword(passwordEncoder.encode("1234"));
             driver.setEnable(true);
             driver.getRoles().add(driverRole);
             driver = driverRepository.save(driver);
@@ -165,7 +161,7 @@ public class SmartRoadsApplication implements CommandLineRunner {
             manager.setEmail("manager" + i + "_" + companyName + "@email.com");
             manager.setFirstName("manager" + i + "_firstName");
             manager.setLastName("manager" + i + "_lastName");
-            manager.setPassword(passwordEncoder.encode("manager" + i));
+            manager.setPassword(passwordEncoder.encode("1234"));
             manager.setEnable(true);
             manager.getRoles().add(managerRole);
             manager = managerRepository.save(manager);

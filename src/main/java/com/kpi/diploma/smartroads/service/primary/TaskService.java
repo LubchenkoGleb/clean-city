@@ -9,4 +9,9 @@ public interface TaskService {
     void createTasksForAllServices();
 
     List<Task> createTaskForService(String serviceId);
+
+    List<Task> getAllActiveTask();
+
+    List<Task> getAllActiveTaskByCompany(String companyId);
+
 }

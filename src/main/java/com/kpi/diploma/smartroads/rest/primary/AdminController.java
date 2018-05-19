@@ -1,6 +1,7 @@
 package com.kpi.diploma.smartroads.rest.primary;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kpi.diploma.smartroads.model.document.map.Task;
 import com.kpi.diploma.smartroads.model.dto.map.ContainerDto;
 import com.kpi.diploma.smartroads.model.dto.map.MapObjectDto;
 import com.kpi.diploma.smartroads.model.dto.user.CompanyDto;
@@ -8,6 +9,7 @@ import com.kpi.diploma.smartroads.model.util.security.MongoUserDetails;
 import com.kpi.diploma.smartroads.model.util.title.Fields;
 import com.kpi.diploma.smartroads.service.primary.CompanyService;
 import com.kpi.diploma.smartroads.service.primary.MapObjectService;
+import com.kpi.diploma.smartroads.service.primary.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,9 +27,12 @@ public class AdminController {
 
     private final MapObjectService mapObjectService;
 
-    public AdminController(CompanyService companyService, MapObjectService mapObjectService) {
+    private final TaskService taskService;
+
+    public AdminController(CompanyService companyService, MapObjectService mapObjectService, TaskService taskService) {
         this.companyService = companyService;
         this.mapObjectService = mapObjectService;
+        this.taskService = taskService;
     }
 
     @GetMapping(value = "/companies-list")
@@ -82,5 +87,14 @@ public class AdminController {
         log.info("'mapObjectDto={}'", mapObjectDto);
 
         return ResponseEntity.ok(mapObjectDto);
+    }
+    @GetMapping(value = "/get-active-task/{companyId}")
+    private ResponseEntity<List<Task>> getActiveTaskByCompany(@PathVariable String companyId) {
+        return ResponseEntity.ok(taskService.getAllActiveTaskByCompany(companyId));
+    }
+
+    @GetMapping(value = "/get-all-active-task")
+    private ResponseEntity<List<Task>> getActiveTask() {
+        return ResponseEntity.ok(taskService.getAllActiveTask());
     }
 }
